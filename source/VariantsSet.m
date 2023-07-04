@@ -99,6 +99,7 @@ classdef VariantsSet
                 NodeLabel=nodeTable.Variant, ...
                 NodeColor=nodeColor, ...
                 Marker=nodeMarker, ...
+                MarkerSize=nodeTable.MarkerSize, ...
                 Layout="force", ...
                 Iterations=5e3, ...
                 WeightEffect='direct');
@@ -168,14 +169,15 @@ end
 function nodeTable = iCreateNodesTable(dataTable)
 % Create the table of nodes for the plot
 nodeTable = dataTable(:, {'Variant', 'Attributes', 'IsStandard'});
-[nodeTable.Marker, nodeTable.Color] = iDefineStyle(nodeTable);
+[nodeTable.Marker, nodeTable.Color, nodeTable.MarkerSize] = iDefineStyle(nodeTable);
 end
 
 
-function [nodeMarkers, nodeColors] = iDefineStyle(nodeTable)
+function [nodeMarkers, nodeColors, nodeMarkerSize] = iDefineStyle(nodeTable)
 % Define the basic style for the nodes in the graph
 tableHeight = height(nodeTable);
 nodeMarkers = repmat("", [tableHeight, 1]);
+nodeMarkerSize = repmat(4, [tableHeight, 1]);
 nodeColors = repmat("black", [tableHeight, 1]);
 
 numVarieties = numel(allVarieties());
@@ -208,6 +210,7 @@ for k = 1:tableHeight
 
     if nodeTable.IsStandard(k)
         nodeMarkers(k) = "pentagram";
+        nodeMarkerSize(k) = 6;
     else
         nodeMarkers(k) = markers(styleIndex);
     end

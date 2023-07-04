@@ -3,6 +3,30 @@ function graphPlot = orientGraphPlot(graphPlot, nodeTable, firstVariety, secondV
 %and second varieties are aligned in the middle.
 
 % Copyright 2023 Acadèmia de su Sardu APS
+
+[angle, ~] = iFindCenter(graphPlot, nodeTable, firstVariety, secondVariety);
+graphPlot = rotateGraphPlot(graphPlot, angle);
+[~, centerCoords] = iFindCenter(graphPlot, nodeTable, firstVariety, secondVariety);
+graphPlot = centerGraphPlot(graphPlot, centerCoords);
+end
+
+
+function tf = iIsVariety(allData, variety)
+tf = cellfun(@(e) any([e.Variety]==variety), allData.Attributes);
+end
+
+
+function tf = iIsStandardOfVariety(allData, variety)
+tf = cellfun(@(e) any([e.Variety]==variety & [e.IsStandard]), allData.Attributes);
+end
+
+
+function width = iComputeWidth(lims)
+width = diff(lims);
+end
+
+
+function [angle, centerCoords] = iFindCenter(graphPlot, nodeTable, firstVariety, secondVariety)
 plotData = table(graphPlot.XData', graphPlot.YData', graphPlot.NodeLabel', ...
     VariableNames={'X', 'Y', 'Variant'});
 allData = join(plotData, nodeTable, Keys={'Variant'});
@@ -39,22 +63,4 @@ elseif numel(firstStandardIndex)==1 && numel(secondStandardIndex)==1
 else
     error("Invalid specification of standards to reference in the plot");
 end
-
-graphPlot = centerGraphPlot(graphPlot, centerCoords);
-graphPlot = rotateGraphPlot(graphPlot, angle);
-end
-
-
-function tf = iIsVariety(allData, variety)
-tf = cellfun(@(e)e.Variety==variety, allData.Attributes);
-end
-
-
-function tf = iIsStandardOfVariety(allData, variety)
-tf = cellfun(@(e)e.Variety==variety & e.IsStandard, allData.Attributes);
-end
-
-
-function width = iComputeWidth(lims)
-width = diff(lims);
 end
