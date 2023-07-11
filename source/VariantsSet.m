@@ -45,6 +45,9 @@ classdef VariantsSet
     properties(Access=private)
         % Internal graph object used for statistics and plotting
         InternalGraph
+
+        % Internal digraph object used for statistics and plotting
+        InternalDigraph
     end
 
     methods
@@ -71,6 +74,9 @@ classdef VariantsSet
             nodesTable = iCreateNodesTable(dataTable);
             edgesTable = iCreateEdgesTable(dataTable, obj.DistanceFunction);
             obj.InternalGraph = graph(edgesTable, nodesTable);
+
+            obj.InternalDigraph = iGraphToDigraph(obj.InternalGraph);
+            obj.InternalDigraph.Edges.IsProximal = iFindProximalNodes(obj.InternalDigraph.Edges);
         end
 
         function graphObject = toGraph(obj)
@@ -78,14 +84,43 @@ classdef VariantsSet
             graphObject = obj.InternalGraph;
         end
 
+        function digraphObject = toDigraph(obj)
+            %TODIGRAPH Convert to a digraph object.
+            digraphObject = obj.InternalDigraph;
+        end
+
         function [plotObject, plotGraph] = plot(obj, options)
             %PLOT Plot the object
+            %
+            % Syntax:
+            %   [PO, G] = plot(VS)
+            %       Plot the object with default settings. Returns a handle
+            %       to the plot and the underlying graph object (graph or 
+            %       digraph) that was used for the plot.
+            %
+            %   [PO, G] = plot(VS, Mode=M)
+            %       Plot different kinds of chart: 'complete' or
+            %       'proximal'. By default, it's 'complete'.
+            %
+            %   [PO, G] = plot(__, CenterVarieties=VC)
+            %       Plot the chart but center the plot around the two
+            %       varieties specified in VC.
             arguments
                 obj (1,1)
                 options.CenterVarieties (1, 2) string
+                options.Mode (1, 1) = "complete"
             end
+            options.Mode = string(options.Mode);
+            allowedModes = ["complete", "proximity"];
+            assert(ismember(options.Mode, allowedModes), ...
+                "Allowed modes are: " + join(allowedModes, ", "));
 
-            [plotObject, plotGraph] = plotVariantsGraph(obj.InternalGraph, options);
+            if options.Mode == "proximity"
+                inputGraph = obj.InternalDigraph;
+            else
+                inputGraph = obj.InternalGraph;
+            end
+            [plotObject, plotGraph] = plotVariantsGraph(inputGraph, options);
         end
 
         function stats = computeStatistics(obj)
@@ -112,7 +147,7 @@ weights = zeros(numEdges, 1);
 
 k = 1;
 for ii = 1:numWords
-    for jj = ii+1:numWords
+    for jj = (ii+1):numWords
         endNodes(k, :) = [ii, jj];
         weights(k) = distanceFunction( ...
             dataTable.Variant(ii), dataTable.Variant(jj));
@@ -163,4 +198,44 @@ for k = 1:inputLength
     attributes{k} = currElementAttributes;
     isActuallyStandard(k) = currElementIsActuallyStandard;
 end
+end
+
+
+function isProximal = iFindProximalNodes(edgesTable)
+% Compute edges that won't show in the final graph
+
+numEdges = height(edgesTable);
+numNodes = iNumNodesFromEdges(edgesTable);
+isProximal = false(numEdges, 1);
+weights = edgesTable.Weight;
+
+for ii = 1:numNodes
+    currEdgeSelector = edgesTable.EndNodes(:, 1) == ii;
+    if ~any(currEdgeSelector)
+        continue;
+    end
+
+    minWeight = min(weights(currEdgeSelector));
+    weightsOfInterest = weights==minWeight;
+    currProximal = currEdgeSelector & weightsOfInterest;
+    isProximal(currProximal) = true;
+end
+end
+
+
+function num = iNumNodesFromEdges(edgesTable)
+num = length(unique([edgesTable.EndNodes(:)]));
+end
+
+
+function aDigraph = iGraphToDigraph(aGraph)
+nodes = aGraph.Nodes;
+edges = aGraph.Edges;
+
+symmetricEndNodes = [edges.EndNodes(:, 2), edges.EndNodes(:, 1)];
+symmetricEdges = edges;
+symmetricEdges.EndNodes = symmetricEndNodes;
+
+digraphEdges = [edges; symmetricEdges];
+aDigraph = digraph(digraphEdges, nodes);
 end

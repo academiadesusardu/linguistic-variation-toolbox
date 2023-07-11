@@ -1,4 +1,4 @@
-function stats = computeVarietyStatistics(inputGraph, variety)
+function [stats, varietySubGraph] = computeVarietyStatistics(inputGraph, variety)
 %COMPUTEVARIETYSTATISTICS Compute some statistics on the data given the
 %variety.
 
@@ -7,8 +7,11 @@ isVariety = cellfun(@(a) iIsCurrentVariety(a, variety), inputGraph.Nodes.Attribu
 nodeIndices = find(isVariety);
 varietySubGraph = subgraph(inputGraph, nodeIndices);
 
-stats = varietySubGraph.Nodes;
+edgesThreshold = computeEdgesWeightThreshold(inputGraph.Edges.Weight);
+isEdgeToRemove = varietySubGraph.Edges.Weight>=edgesThreshold;
+varietySubGraph = rmedge(varietySubGraph, find(isEdgeToRemove));
 
+stats = varietySubGraph.Nodes;
 weights = varietySubGraph.Edges.Weight;
 inverseWeights = max(weights) - weights + 1;
 

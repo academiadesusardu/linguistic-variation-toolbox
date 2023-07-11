@@ -36,15 +36,25 @@ if isfield(options, 'CenterVarieties')
 end
 
 colorBar = colorbar(currAxes, "eastoutside");
-colorMap = iColorMap();
+colorMap = iColorMap(plotGraph.Edges.Weight);
 colormap(currAxes, colorMap);
 colorBar = iSetColorBarTicks(colorBar, size(colorMap, 1));
-colorBar.Label.String = "Distance between variants";
+colorBar.Label.String = "Edge colour: distance between variants";
+
+edgeTable = plotGraph.Edges;
+if options.Mode == "proximity"
+    lineStyle = cell(height(edgeTable), 1);
+    lineStyle(edgeTable.IsProximal) = repmat({'-'}, [sum(edgeTable.IsProximal), 1]);
+    lineStyle(~edgeTable.IsProximal) = repmat({'none'}, [sum(~edgeTable.IsProximal), 1]);
+    plotObject.LineStyle = lineStyle;
+end
 end
 
 
 function [edgesColor, edgesWidth] = iGetEdgesSpec(weights)
-[colors, widths] = arrayfun(@iEdgeComputeColorAndWidth, weights, UniformOutput=false);
+colorMap = iColorMap(weights);
+[colors, widths] = arrayfun(@(w) iEdgeComputeColorAndWidth(w, colorMap), ...
+    weights, UniformOutput=false);
 edgesColor = cell2mat(colors);
 edgesWidth = cell2mat(widths);
 end
@@ -124,15 +134,14 @@ function index = iGetVarietyIndex(variety)
 index = find(allVarieties() == variety);
 end
 
-function cm = iColorMap()
-maxColors = 4;
-cm = gray(maxColors);
+function cm = iColorMap(data)
+numColors = computeEdgesWeightThreshold(data);
+cm = gray(numColors);
 end
 
 
-function [color, width] = iEdgeComputeColorAndWidth(weight)
-colorMap = iColorMap();
-
+function [color, width] = iEdgeComputeColorAndWidth(weight, colorMap)
+% Given the edge's weight, determine what it should look like
 maxColors = size(colorMap, 1);
 index = weight;
 if index>=maxColors
