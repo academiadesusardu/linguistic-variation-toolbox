@@ -1,0 +1,147 @@
+[
+ {
+   "Variant": "gennaju",
+   "Varieties": ["C"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "gennàlgiu",
+   "Varieties": ["C"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "gennarxu",
+   "Varieties": ["C"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "gennaxu",
+   "Varieties": ["C"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "grennaxu",
+   "Varieties": ["C"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "bennalzu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "bennardu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "bennarzu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "bennasu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "bennazu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "cennalzu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "ciannalzu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "gennàgliu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "gennalzu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "gennarzu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "ghennàgiu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "ghennàrgiu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "ghenuàgiu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "giannàgliu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "giannàrgiu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "giannarju",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "giannarzu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "jannarju",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "zannarju",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "zannarzu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "zennarju",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "zennarzu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "gennàrgiu",
+   "Varieties": ["C"],
+   "IsStandard": 1
+ },
+ {
+   "Variant": "ghennarzu",
+   "Varieties": ["L"],
+   "IsStandard": 1
+ }
+]

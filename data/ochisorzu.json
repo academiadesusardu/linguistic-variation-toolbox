@@ -1,0 +1,127 @@
+[
+ {
+   "Variant": "acidroxu",
+   "Varieties": ["C"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "acisòlgiu",
+   "Varieties": ["C"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "acisòrgiu",
+   "Varieties": ["C"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "ancisòrgiu",
+   "Varieties": ["C"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "antzisorxu",
+   "Varieties": ["C"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "arcisòrgiu",
+   "Varieties": ["C"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "atzidroxu",
+   "Varieties": ["C"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "atzisòlgiu",
+   "Varieties": ["C"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "atzisòrgiu",
+   "Varieties": ["C"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "ochisòrgiu",
+   "Varieties": ["C"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "ocidòrgiu",
+   "Varieties": ["C"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "schisòrgiu",
+   "Varieties": ["C"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "ocisòrgiu",
+   "Varieties": ["C"],
+   "IsStandard": 1
+ },
+ {
+   "Variant": "ochisorzu",
+   "Varieties": ["L"],
+   "IsStandard": 1
+ },
+ {
+   "Variant": "achisògliu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "achisorju",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "bochisorzu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "chisògliu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "chisorju",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "chisòrgiu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "chisorzu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "isòrgiu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "ochisògliu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "ochisolzu",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ },
+ {
+   "Variant": "ochisorju",
+   "Varieties": ["L"],
+   "IsStandard": 0
+ }
+]

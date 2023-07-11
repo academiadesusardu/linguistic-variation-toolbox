@@ -89,12 +89,12 @@ function [ rgb ] = hex2rgb(hex,range)
 assert(nargin>0&nargin<3,'hex2rgb function must have one or two inputs.')
 
 if nargin==2
-    assert(isscalar(range)==1,'Range must be a scalar, either "1" to scale from 0 to 1 or "256" to scale from 0 to 255.')
+    assert(isscalar(range),'Range must be a scalar, either "1" to scale from 0 to 1 or "256" to scale from 0 to 255.')
 end
 
 %% Tweak inputs if necessary:
 if iscell(hex)
-    assert(isvector(hex)==1,'Unexpected dimensions of input hex values.')
+    assert(isvector(hex),'Unexpected dimensions of input hex values.')
 
     % In case cell array elements are separated by a comma instead of a
     % semicolon, reshape hex:

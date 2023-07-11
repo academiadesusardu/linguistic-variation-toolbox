@@ -78,44 +78,14 @@ classdef VariantsSet
             graphObject = obj.InternalGraph;
         end
 
-        function plotObject = plot(obj, options)
+        function [plotObject, plotGraph] = plot(obj, options)
             %PLOT Plot the object
             arguments
                 obj (1,1)
                 options.CenterVarieties (1, 2) string
             end
 
-            nodeTable = obj.InternalGraph.Nodes;
-            edgeTable = obj.InternalGraph.Edges;
-
-            currFigure = gcf();
-            currAxes = axes(currFigure, Visible="off");
-
-            nodeColor = iGetColorspec(nodeTable.Color);
-            nodeMarker = nodeTable.Marker;
-
-            plotObject = plot(obj.InternalGraph, ...
-                Parent=currAxes, ...
-                NodeLabel=nodeTable.Variant, ...
-                NodeColor=nodeColor, ...
-                Marker=nodeMarker, ...
-                MarkerSize=nodeTable.MarkerSize, ...
-                Layout="force", ...
-                Iterations=5e3, ...
-                WeightEffect='direct');
-
-            if isfield(options, 'CenterVarieties')
-                plotObject = orientGraphPlot(plotObject, ...
-                    nodeTable, ...
-                    options.CenterVarieties(1), ...
-                    options.CenterVarieties(2));
-            end
-
-            % Remove confusing edges
-            lineStyle = cell(height(edgeTable), 1);
-            lineStyle(edgeTable.NotInPlot) = repmat({'none'}, [sum(edgeTable.NotInPlot), 1]);
-            lineStyle(~edgeTable.NotInPlot) = repmat({'-'}, [sum(~edgeTable.NotInPlot), 1]);
-            plotObject.LineStyle = lineStyle;
+            [plotObject, plotGraph] = plotVariantsGraph(obj.InternalGraph, options);
         end
     end
 end
@@ -124,15 +94,16 @@ end
 function edgesTable = iCreateEdgesTable(dataTable, distanceFunction)
 % Create the edges table for the internal graph
 numWords = height(dataTable);
-numEdges = ((numWords^2)-numWords)/2;
+numEdges = (numWords^2-numWords)/2;
 endNodes = zeros(numEdges, 2);
 weights = zeros(numEdges, 1);
 
 k = 1;
-for ii = 1:(numWords-1)
-    for jj = (ii+1):numWords
+cachedDistanceFunction = memoize(distanceFunction);
+for ii = 1:numWords
+    for jj = ii+1:numWords
         endNodes(k, :) = [ii, jj];
-        weights(k) = distanceFunction( ...
+        weights(k) = cachedDistanceFunction( ...
             dataTable.Variant(ii), dataTable.Variant(jj));
         k = k+1;
     end
@@ -140,88 +111,12 @@ end
 
 edgesTable = table(endNodes, weights, ...
     VariableNames=["EndNodes", "Weight"]);
-
-% Compute edges that won't show in the final graph
-edgesTable.NotInPlot = false(numEdges, 1);
-for ii = 1:numWords
-    currEdgeSelector = endNodes(:, 1) == ii;
-    if ~any(currEdgeSelector)
-        continue;
-    end
-
-    minWeight = min(weights(currEdgeSelector));
-    weightsOfInterest = weights>minWeight;
-    toRemove = currEdgeSelector & weightsOfInterest;
-    edgesTable.NotInPlot(toRemove) = true;
-end
-end
-
-
-function colorSpec = iGetColorspec(colorHex)
-% Given the color's hex codes, get the spec in a way that can be used in
-% MATLAB plots
-colorSpec = cell2mat(cellfun(@hex2rgb, ...
-    cellstr(colorHex), ...
-    UniformOutput=false));
 end
 
 
 function nodeTable = iCreateNodesTable(dataTable)
 % Create the table of nodes for the plot
 nodeTable = dataTable(:, {'Variant', 'Attributes', 'IsStandard'});
-[nodeTable.Marker, nodeTable.Color, nodeTable.MarkerSize] = iDefineStyle(nodeTable);
-end
-
-
-function [nodeMarkers, nodeColors, nodeMarkerSize] = iDefineStyle(nodeTable)
-% Define the basic style for the nodes in the graph
-tableHeight = height(nodeTable);
-nodeMarkers = repmat("", [tableHeight, 1]);
-nodeMarkerSize = repmat(4, [tableHeight, 1]);
-nodeColors = repmat("black", [tableHeight, 1]);
-
-numVarieties = numel(allVarieties());
-markers =   [ ...
-    "o", ...
-    "square", ...
-    "*", ...
-    "diamond", ...
-    "x", ...
-    "+", ....
-    "hexagram"];
-colors =    [ ...
-    "#4daf4a", ...
-    "#e41a1c", ...
-    "#377eb8", ...
-    "#984ea3", ...
-    "#ff7f00", ...
-    "#ffff33", ...
-    "#a65628" ];
-
-for k = 1:tableHeight
-    currAttributes = nodeTable.Attributes{k};
-
-    if length(currAttributes)>1
-        styleIndex = numVarieties+1;
-    else
-        currVariety = currAttributes.Variety;
-        styleIndex = iGetVarietyIndex(currVariety);
-    end
-
-    if nodeTable.IsStandard(k)
-        nodeMarkers(k) = "pentagram";
-        nodeMarkerSize(k) = 6;
-    else
-        nodeMarkers(k) = markers(styleIndex);
-    end
-    nodeColors(k) = colors(styleIndex);
-end
-end
-
-
-function index = iGetVarietyIndex(variety)
-% Get the index of the variety among all the varieties
-index = find(allVarieties() == variety);
 end
 
 

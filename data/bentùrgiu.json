@@ -1,0 +1,301 @@
+[
+  {
+    "Variant": "antruxu",
+    "Varieties": [
+      "C"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "anturxu",
+    "Varieties": [
+      "C"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "bentruxu",
+    "Varieties": [
+      "C"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "brantuxu",
+    "Varieties": [
+      "C"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "brentuxu",
+    "Varieties": [
+      "C"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "contruxu",
+    "Varieties": [
+      "C"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "guntruxu",
+    "Varieties": [
+      "C"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "guntùrgiu",
+    "Varieties": [
+      "C"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "gurtùrgiu",
+    "Varieties": [
+      "C"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "gutùrgiu",
+    "Varieties": [
+      "C"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "entrùgiu",
+    "Varieties": [
+      "C"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "entùrgiu",
+    "Varieties": [
+      "C"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "intruxu",
+    "Varieties": [
+      "C"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "intùlgiu",
+    "Varieties": [
+      "C"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "intùrgiu",
+    "Varieties": [
+      "C"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "untruxu",
+    "Varieties": [
+      "C"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "untùrgiu",
+    "Varieties": [
+      "C"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "anturzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "antuzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "aturzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "bunturzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "curturzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "enturzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "guntorzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "guntùgliu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "gunturzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "gurtorju",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "gurtùgliu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "gurturju",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "gurturzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "guturju",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "guturzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "entulzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "intulzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "inturzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "tentulzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "ulturzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "unturzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "uturzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "venturzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "utùrgiu",
+    "Varieties": ["C", "L"],
+    "IsStandard": 0
+  },
+  {
+    "Variant": "bentùrgiu",
+    "Varieties": [
+      "C"
+    ],
+    "IsStandard": 1
+  },
+  {
+    "Variant": "benturzu",
+    "Varieties": [
+      "L"
+    ],
+    "IsStandard": 1
+  }
+]
