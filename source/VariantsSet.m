@@ -87,6 +87,18 @@ classdef VariantsSet
 
             [plotObject, plotGraph] = plotVariantsGraph(obj.InternalGraph, options);
         end
+
+        function stats = computeStatistics(obj)
+            %COMPUTESTATISTICS Compute the statistics over the input data.
+            varieties = allVarieties();
+            numVarieties = length(varieties);
+            stats = struct();
+
+            for k = 1:numVarieties
+                currVariety = varieties(k);
+                stats.(currVariety) = computeVarietyStatistics(obj.InternalGraph, currVariety);
+            end
+        end
     end
 end
 
@@ -99,11 +111,10 @@ endNodes = zeros(numEdges, 2);
 weights = zeros(numEdges, 1);
 
 k = 1;
-cachedDistanceFunction = memoize(distanceFunction);
 for ii = 1:numWords
     for jj = ii+1:numWords
         endNodes(k, :) = [ii, jj];
-        weights(k) = cachedDistanceFunction( ...
+        weights(k) = distanceFunction( ...
             dataTable.Variant(ii), dataTable.Variant(jj));
         k = k+1;
     end
