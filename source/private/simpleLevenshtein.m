@@ -3,19 +3,22 @@ function distance = simpleLevenshtein(first, second)
 %variants based on the Levenshtein distance.
 
 % Copyright 2023 Acadèmia de su Sardu APS
+
 first = iReplaceDiacritics(first);
 second = iReplaceDiacritics(second);
 distance = levenshteinCore(first, second);
 end
 
+
 function replaced = iReplaceDiacritics(inString)
 % Replace all the characters with diacritic-less characters as specified in
 % the the replacement table.
+
 replaced = inString;
-replacementTable = iReplacementTable();
-for k = 1:height(replacementTable)
-    substituteTo = replacementTable.After(k);
-    listOfCharctersToSubstitute = replacementTable.Before{k};
+[before, after] = iReplacementTable();
+for k = 1:numel(before)
+    substituteTo = after{k};
+    listOfCharctersToSubstitute = before{k};
 
     for c = 1:length(listOfCharctersToSubstitute)
         currCharacterToSubstitute = listOfCharctersToSubstitute(c);
@@ -24,7 +27,8 @@ for k = 1:height(replacementTable)
 end
 end
 
-function tbl = iReplacementTable()
+
+function [before, after] = iReplacementTable()
 conversionData = ...
     {'a', 'àá' ; ...
     'e', 'èé' ; ...
@@ -36,6 +40,6 @@ conversionData = ...
     'I', 'ÌÍ' ; ...
     'O', 'ÒÓ' ; ...
     'U', 'ÙÚ'};
-tbl = table(cell2mat(conversionData(:, 1)), conversionData(:, 2), ...
-    VariableNames={'After', 'Before'});
+before = conversionData(:, 1);
+after = conversionData(:, 2);
 end

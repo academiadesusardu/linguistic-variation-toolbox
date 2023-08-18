@@ -1,127 +1,127 @@
 [
  {
    "Variant": "acidroxu",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 0
  },
  {
    "Variant": "acisòlgiu",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 0
  },
  {
    "Variant": "acisòrgiu",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 0
  },
  {
    "Variant": "ancisòrgiu",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 0
  },
  {
    "Variant": "antzisorxu",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 0
  },
  {
    "Variant": "arcisòrgiu",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 0
  },
  {
    "Variant": "atzidroxu",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 0
  },
  {
    "Variant": "atzisòlgiu",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 0
  },
  {
    "Variant": "atzisòrgiu",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 0
  },
  {
    "Variant": "ochisòrgiu",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 0
  },
  {
    "Variant": "ocidòrgiu",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 0
  },
  {
    "Variant": "schisòrgiu",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 0
  },
  {
    "Variant": "ocisòrgiu",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 1
  },
  {
    "Variant": "ochisorzu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 1
  },
  {
    "Variant": "achisògliu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "achisorju",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "bochisorzu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "chisògliu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "chisorju",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "chisòrgiu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "chisorzu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "isòrgiu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "ochisògliu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "ochisolzu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "ochisorju",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  }
 ]

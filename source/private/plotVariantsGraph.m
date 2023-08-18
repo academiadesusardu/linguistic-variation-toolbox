@@ -3,6 +3,7 @@ function [plotObject, plotGraph] = plotVariantsGraph(inputGraph, options)
 %set of variants.
 
 % Copyright 2023 Acadèmia de su Sardu APS
+
 currFigure = figure();
 currAxes = axes(currFigure, Visible="off");
 
@@ -15,6 +16,12 @@ plotGraph.Nodes.Color = iGetRgbColor(plotGraph.Nodes.Color);
 [plotGraph.Edges.Color, ...
     plotGraph.Edges.Width] = iGetEdgesSpec(plotGraph.Edges.Weight);
 
+if options.PlacementAlgorithm == getForcePlacementAlgorithmString()
+    iterations = 5e3;
+else
+    iterations = 1;
+end
+
 plotObject = plot(plotGraph, ...
     Parent=currAxes, ...
     NodeLabel=plotGraph.Nodes.Variant, ...
@@ -25,14 +32,18 @@ plotObject = plot(plotGraph, ...
     EdgeColor=plotGraph.Edges.Color, ...
     LineWidth=plotGraph.Edges.Width, ...
     Layout="force", ...
-    Iterations=5e3, ...
-    WeightEffect='direct');
+    WeightEffect='direct', ...
+    Iterations=iterations);
 
-if isfield(options, 'CenterVarieties')
+if options.PlacementAlgorithm == getMdsPlacementAlgorithmString()
+    plotObject = placeVariantsInPlot(plotObject, plotGraph);
+end
+
+if isfield(options, 'CenterCategories')
     plotObject = orientGraphPlot(plotObject, ...
         plotGraph.Nodes, ...
-        options.CenterVarieties(1), ...
-        options.CenterVarieties(2));
+        options.CenterCategories(1), ...
+        options.CenterCategories(2));
 end
 
 colorBar = colorbar(currAxes, "eastoutside");
@@ -42,7 +53,7 @@ colorBar = iSetColorBarTicks(colorBar, size(colorMap, 1));
 colorBar.Label.String = "Edge colour: distance between variants";
 
 edgeTable = plotGraph.Edges;
-if options.Mode == "proximity"
+if options.Mode == getProximalPlotModeString()
     lineStyle = cell(height(edgeTable), 1);
     lineStyle(edgeTable.IsProximal) = repmat({'-'}, [sum(edgeTable.IsProximal), 1]);
     lineStyle(~edgeTable.IsProximal) = repmat({'none'}, [sum(~edgeTable.IsProximal), 1]);
@@ -90,7 +101,7 @@ nodeMarkers = repmat("", [tableHeight, 1]);
 nodeMarkerSize = repmat(4, [tableHeight, 1]);
 nodeColors = repmat("black", [tableHeight, 1]);
 
-numVarieties = numel(allVarieties());
+numCategories = numel(allCategories());
 markers =   [ ...
     "o", ...
     "square", ...
@@ -112,10 +123,10 @@ for k = 1:tableHeight
     currAttributes = nodeTable.Attributes{k};
 
     if length(currAttributes)>1
-        styleIndex = numVarieties+1;
+        styleIndex = numCategories+1;
     else
-        currVariety = currAttributes.Variety;
-        styleIndex = iGetVarietyIndex(currVariety);
+        currCategory = currAttributes.Category;
+        styleIndex = iGetCategoryIndex(currCategory);
     end
 
     if nodeTable.IsStandard(k)
@@ -129,9 +140,9 @@ end
 end
 
 
-function index = iGetVarietyIndex(variety)
-% Get the index of the variety among all the varieties
-index = find(allVarieties() == variety);
+function index = iGetCategoryIndex(category)
+% Get the index of the category among all the categories
+index = find(allCategories() == category);
 end
 
 function cm = iColorMap(data)

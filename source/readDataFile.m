@@ -6,6 +6,6 @@ function dataTable = readDataFile(inputFile)
 
 % Copyright 2023 Acadèmia de su Sardu APS
 dataTable = struct2table(jsondecode(fileread(inputFile)));
-dataTable.Varieties = cellfun(@string, dataTable.Varieties, 'UniformOutput', false);
+dataTable.Categories = cellfun(@string, dataTable.Categories, 'UniformOutput', false);
 end
 

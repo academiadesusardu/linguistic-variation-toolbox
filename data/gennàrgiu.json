@@ -1,147 +1,147 @@
 [
  {
    "Variant": "gennaju",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 0
  },
  {
    "Variant": "gennàlgiu",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 0
  },
  {
    "Variant": "gennarxu",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 0
  },
  {
    "Variant": "gennaxu",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 0
  },
  {
    "Variant": "grennaxu",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 0
  },
  {
    "Variant": "bennalzu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "bennardu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "bennarzu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "bennasu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "bennazu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "cennalzu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "ciannalzu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "gennàgliu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "gennalzu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "gennarzu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "ghennàgiu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "ghennàrgiu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "ghenuàgiu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "giannàgliu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "giannàrgiu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "giannarju",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "giannarzu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "jannarju",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "zannarju",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "zannarzu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "zennarju",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "zennarzu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 0
  },
  {
    "Variant": "gennàrgiu",
-   "Varieties": ["C"],
+   "Categories": ["C"],
    "IsStandard": 1
  },
  {
    "Variant": "ghennarzu",
-   "Varieties": ["L"],
+   "Categories": ["L"],
    "IsStandard": 1
  }
 ]

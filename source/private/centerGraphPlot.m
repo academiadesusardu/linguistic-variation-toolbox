@@ -2,6 +2,7 @@ function aPlot = centerGraphPlot(aPlot, centerCoordinates)
 %CENTERGRAPHPLOT Given a plot, center it to the given point.
 
 % Copyright 2023 Acadèmia de su Sardu APS
+
 xData = aPlot.XData;
 yData = aPlot.YData;
 
@@ -14,6 +15,7 @@ finalXWidth = maxXDiff*1.4;
 ylim(plotAxis, [centerCoordinates(2)-finalYWidth, centerCoordinates(2)+finalYWidth]);
 xlim(plotAxis, [centerCoordinates(1)-finalXWidth, centerCoordinates(1)+finalXWidth]);
 end
+
 
 function dist = iMaxDistance(data, center)
 dist = max(abs(data-center));

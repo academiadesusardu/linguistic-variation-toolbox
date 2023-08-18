@@ -1,23 +1,23 @@
-function graphPlot = orientGraphPlot(graphPlot, nodeTable, firstVariety, secondVariety)
+function graphPlot = orientGraphPlot(graphPlot, nodeTable, firstCategory, secondCategory)
 %ORIENTGRAPHPLOT Given a graph plot, orient it in such a way that the first
-%and second varieties are aligned in the middle.
+%and second categories are aligned in the middle.
 
 % Copyright 2023 Acadèmia de su Sardu APS
 
-[angle, ~] = iFindCenter(graphPlot, nodeTable, firstVariety, secondVariety);
+[angle, ~] = iFindCenter(graphPlot, nodeTable, firstCategory, secondCategory);
 graphPlot = rotateGraphPlot(graphPlot, angle);
-[~, centerCoords] = iFindCenter(graphPlot, nodeTable, firstVariety, secondVariety);
+[~, centerCoords] = iFindCenter(graphPlot, nodeTable, firstCategory, secondCategory);
 graphPlot = centerGraphPlot(graphPlot, centerCoords);
 end
 
 
-function tf = iIsVariety(allData, variety)
-tf = cellfun(@(e) any([e.Variety]==variety), allData.Attributes);
+function tf = iIsCategory(allData, category)
+tf = cellfun(@(e) any([e.Category]==category), allData.Attributes);
 end
 
 
-function tf = iIsStandardOfVariety(allData, variety)
-tf = cellfun(@(e) any([e.Variety]==variety & [e.IsStandard]), allData.Attributes);
+function tf = iIsStandardOfCategory(allData, category)
+tf = cellfun(@(e) any([e.Category]==category & [e.IsStandard]), allData.Attributes);
 end
 
 
@@ -26,7 +26,7 @@ width = diff(lims);
 end
 
 
-function [angle, centerCoords] = iFindCenter(graphPlot, nodeTable, firstVariety, secondVariety)
+function [angle, centerCoords] = iFindCenter(graphPlot, nodeTable, firstCategory, secondCategory)
 plotData = table(graphPlot.XData', graphPlot.YData', graphPlot.NodeLabel', ...
     VariableNames={'X', 'Y', 'Variant'});
 allData = join(plotData, nodeTable, Keys={'Variant'});
@@ -34,11 +34,11 @@ allData = join(plotData, nodeTable, Keys={'Variant'});
 plotAxes = graphPlot.Parent;
 xWidth = iComputeWidth(xlim(plotAxes));
 
-allData.IsFirstVariety = iIsVariety(allData, firstVariety);
-allData.IsSecondVariety = iIsVariety(allData, secondVariety);
+allData.IsFirstCategory = iIsCategory(allData, firstCategory);
+allData.IsSecondCategory = iIsCategory(allData, secondCategory);
 
-firstStandardIndex = find(iIsStandardOfVariety(allData, firstVariety));
-secondStandardIndex = find(iIsStandardOfVariety(allData, secondVariety));
+firstStandardIndex = find(iIsStandardOfCategory(allData, firstCategory));
+secondStandardIndex = find(iIsStandardOfCategory(allData, secondCategory));
 
 if numel(firstStandardIndex)==1
     firstStandardCoords = [allData.X(firstStandardIndex), allData.Y(firstStandardIndex)];
