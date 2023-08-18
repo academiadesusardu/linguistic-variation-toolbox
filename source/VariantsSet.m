@@ -1,7 +1,6 @@
 classdef VariantsSet < handle
     %VARIANTSSET A set of variants of the same word.
     %
-    % Syntax:
     %   G = VariantsSet(VN, VR)
     %       Construct the object given:
     %           - The array of variants VN
@@ -24,7 +23,30 @@ classdef VariantsSet < handle
     %       Construct the object with the syntax(es) in the previous examples,
     %       but also specify a custom distance function.
     %
-    %  Example:
+    %
+    % VariantsSet properties:
+    %   VariantTable     - A summary of all the data about the variants.
+    %   DistanceTable    - All distances between variants.
+    %   DistanceFunction - The metric used to compute distances.
+    %
+    % VariantsSet methods:
+    %   getNumberOfVariants     - Get the number of variants represented by
+    %                             the current object.
+    %   isStandard              - Given a variant, check if it is standard
+    %                             or not.
+    %   getDistanceBetween      - Get the distance between two or more variants
+    %                             according to the DistanceFunction metric.
+    %   getCategoriesOf         - Get the categories of one or more variants.
+    %   getStandardIn           - Get the standard in a given category.
+    %   getVariantsIn           - Get the variants in a given category.
+    %   computeStatistics       - Compute some statistics on the given set of
+    %                             variants and display them to screen.
+    %   plot                    - Visually represent the set of variants as a
+    %                             graph.
+    %   plotDistances           - Represent the distances between variants in
+    %                             the current object using boxplots.
+    %
+    % Example:
     %   allCategories(["camp", "log"]);
     %   variants = ["ocisòrgiu", "ochisorzu", "bochisorzu"];
     %   categories = {"camp", "log", "log"};
@@ -60,8 +82,7 @@ classdef VariantsSet < handle
     methods
         function obj = VariantsSet(variants, categoriesOrAttributes, isStandard, options)
             %VARIANTSSET Construct an object representing a set of
-            % variants of the same word.
-
+            % variants of the same word
             arguments
                 variants {mustBeText}
                 categoriesOrAttributes cell
@@ -71,7 +92,6 @@ classdef VariantsSet < handle
             variants = reshape(string(variants), [], 1);
             assert(numel(unique(variants))==numel(variants), ...
                 "The elements in the variant array are not unique.")
-
 
             [attributes, isStandard] = ...
                 iComputeAttributes(categoriesOrAttributes, isStandard);
@@ -95,14 +115,20 @@ classdef VariantsSet < handle
 
         function numVariants = getNumberOfVariants(obj)
             %GETNUMBEROFVARIANTS Get the total number of variants
-
+            %
+            % Syntax:
+            %   N = getNumberOfVariants(S)
+            %       Return the number of variants
             numVariants = height(obj.VariantTable);
         end
 
 
         function categories = getCategoriesOf(obj, variant)
             %GETVARIETIESOF Get the categories of a given variant.
-
+            %
+            % Syntax:
+            %   C = getCategoriesOf(S, V)
+            %       Get the categories of the given variant V.
             arguments
                 obj (1,1)
                 variant (1, 1) string
@@ -115,7 +141,10 @@ classdef VariantsSet < handle
         function variants = getVariantsIn(obj, category)
             %GETVARIANTSIN Get the variants that belong to the given
             %category.
-
+            %
+            % Syntax:
+            %   V = getVariantsIn(S, C)
+            %       Get the variants in category C.
             arguments
                 obj (1,1)
                 category (1, 1) string
@@ -135,7 +164,10 @@ classdef VariantsSet < handle
         function tf = isStandard(obj, variant)
             %ISSTANDARD Return true if the given variant the standard of
             %one or more categories.
-
+            %
+            % Syntax:
+            %   TF = isStandard(S, V)
+            %       Check if variant V is standard.
             arguments
                 obj (1,1)
                 variant (1, 1) string
@@ -147,7 +179,10 @@ classdef VariantsSet < handle
 
         function variants = getStandardIn(obj, category)
             %GETSTANDARDIN Get the standard variant in the given category.
-
+            %
+            % Syntax:
+            %   S = getStandardIn(S, C)
+            %       Get the standard variant in category C.
             arguments
                 obj (1,1)
                 category (1, 1) string
@@ -177,6 +212,26 @@ classdef VariantsSet < handle
         end
 
 
+        function uniqueDistances = getDistanceBetween(obj, firstVariants, secondVariants)
+            %GETDISTANCEBETWEEN Given two sets of variants, get the distances
+            %between them, but count the distance between two variants only
+            %once.
+            %
+            % Syntax:
+            %   D = getDistanceBetween(S, V1, V2)
+            %       Get the distance between all the variants in V1 and all
+            %       the variants in V2.
+            uniqueDistances = obj.getUniqueDistancesTable();
+
+            selectEdges = @(r) iSelectVariantCouple(r, firstVariants, secondVariants);
+            currEdgesSelector = table2array(rowfun(selectEdges, ...
+                uniqueDistances, ...
+                InputVariables='EndVariants'));
+            currEdges = uniqueDistances(currEdgesSelector, :);
+            uniqueDistances = currEdges.Distance;
+        end
+
+
         function [plotObject, plotGraph] = plot(obj, options)
             %PLOT Represent the set of variants graphically.
             %
@@ -195,10 +250,9 @@ classdef VariantsSet < handle
             %       categories specified in VC.
             %
             %   [PO, G] = plot(VS, PlacementAlgorithm=M)
-            %       Specify the placement algorithm: "force", i.e. 
-            %       force-directed graph plot, or "mds", i.e. 
+            %       Specify the placement algorithm: "force", i.e.
+            %       force-directed graph plot, or "mds", i.e.
             %       multi-dimensional scaling. By default, it's "force".
-
             arguments
                 obj (1,1)
                 options.CenterCategories (1, 2) string
@@ -218,7 +272,6 @@ classdef VariantsSet < handle
                 inputGraph = obj.InternalGraph;
             end
             [plotObject, plotGraph] = plotVariantsGraph(inputGraph, options);
-            title(plotObject.Parent, "Variants");
         end
 
 
@@ -230,7 +283,6 @@ classdef VariantsSet < handle
             %   PO = plotDistances(VS, C)
             %       Create a plot that represents the distances within
             %       category C. Returns a handle to the axes.
-
             arguments
                 obj (1,1)
             end
@@ -266,7 +318,7 @@ classdef VariantsSet < handle
                     for j = (i+1):numCurrCategories
                         currSecondVariants = obj.getVariantsIn(currCategories(j));
                         currData = [currData; ...
-                            obj.findDistancesBetweenVariants(...
+                            obj.getDistanceBetween(...
                             currFirstVariants, currSecondVariants)]; %#ok<AGROW>
                     end
                 end
@@ -279,12 +331,24 @@ classdef VariantsSet < handle
             plotAxes = plotBoxScatter(cell2mat(dataToPlot), ...
                 cell2mat(groupOfData), ...
                 labelOfData);
-            title(plotAxes, "Distance between variants");
         end
 
 
-        function stats = computeStatistics(obj)
+        function stats = computeStatistics(obj, options)
             %COMPUTESTATISTICS Compute the statistics over the input data.
+            %
+            % Syntax:
+            %   ST = computeStatistics(S)
+            %       Print all all the statistics about the VariantsSet object
+            %       S and return them as a struct.
+            %
+            %   S = computeStatistics(__, Quiet=Q)
+            %       Return the statistics but do not print them out to
+            %       screen. Q is false by default.
+            arguments
+                obj (1,1)
+                options.Quiet (1, 1) logical = false
+            end
 
             categories = allCategories();
             numCategories = length(categories);
@@ -292,7 +356,12 @@ classdef VariantsSet < handle
 
             for k = 1:numCategories
                 currCategory = categories(k);
-                stats.(currCategory) = computeCategoryStatistics(obj.InternalGraph, currCategory);
+                stats.("Category" + currCategory) = computeCategoryStatistics( ...
+                    obj.InternalGraph, currCategory);
+            end
+
+            if ~options.Quiet
+                iPrintStatistics(stats, 0);
             end
         end
     end
@@ -320,20 +389,6 @@ classdef VariantsSet < handle
                 obj.UniqueDistances = unique(rowsOfInterest);
             end
             uniqueDistances = obj.UniqueDistances;
-        end
-
-
-        function uniqueDistances = findDistancesBetweenVariants(obj, firstVariants, secondVariants)
-            % Given two sets of variants, find the distances between them,
-            % but count the distance between two variants only once.
-            uniqueDistances = obj.getUniqueDistancesTable();
-
-            selectEdges = @(r) iSelectVariantCouple(r, firstVariants, secondVariants);
-            currEdgesSelector = table2array(rowfun(selectEdges, ...
-                uniqueDistances, ...
-                InputVariables='EndVariants'));
-            currEdges = uniqueDistances(currEdgesSelector, :);
-            uniqueDistances = currEdges.Distance;
         end
     end
 end
@@ -500,4 +555,42 @@ if ...
         isequal(allMatches, [1, 1, 1, 1])
     tf = true;
 end
+end
+
+
+function iPrintStatistics(aStruct, indentationLevel)
+% Recursively print a struct.
+allFieldNames = string(fields(aStruct));
+fieldNameWidth = max(strlength(allFieldNames)) + 2;
+padding = iPad(indentationLevel);
+
+for k = 1:numel(allFieldNames)
+    currField = allFieldNames(k);
+    currFieldContent = aStruct.(currField);
+    if isstruct(currFieldContent)
+        disp(padding + currField + ":" + newline());
+        iPrintStatistics(currFieldContent, indentationLevel + 1);
+    elseif istable(currFieldContent)
+        disp(padding + currField + ":" + newline());
+        currFieldContent = removevars(currFieldContent, "Attributes");
+        disp(currFieldContent);
+    else
+        disp(compose(padding + "%" + fieldNameWidth + "s:\t") + string(currFieldContent));
+    end
+end
+end
+
+
+function text = iPrintTableToText(aTable, indentationLevel) %#ok<INUSD> 
+text = string(evalc('disp(aTable)'));
+
+textLines = splitlines(text);
+textLines = erase(textLines, regexpPattern('^\s\s'));
+
+text = join(iPad(indentationLevel) + textLines, newline);
+end
+
+
+function padding = iPad(indentationLevel)
+padding = string(repmat(' ', [1, indentationLevel]));
 end

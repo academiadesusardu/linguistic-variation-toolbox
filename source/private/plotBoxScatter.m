@@ -2,7 +2,6 @@ function currAxis = plotBoxScatter(data, group, xTickLabels)
 %PLOTBOXSCATTER Create boxplots with an internal scatterplot
 
 % Copyright 2023 Acadèmia de su Sardu APS
-
 numGroups = numel(unique(group));
 
 % New figure
