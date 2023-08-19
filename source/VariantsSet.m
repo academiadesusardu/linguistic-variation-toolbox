@@ -97,7 +97,7 @@ classdef VariantsSet < handle
                 iComputeAttributes(categoriesOrAttributes, isStandard);
 
             dataTable = table(variants, attributes, isStandard);
-            dataTable.Properties.VariableNames = {'Variant', 'Attributes', 'IsStandard'};
+            dataTable.Properties.VariableNames = {'Name', 'Attributes', 'IsStandard'};
 
             obj.VariantTable = dataTable;
             obj.DistanceFunction = options.DistanceFunction;
@@ -107,7 +107,7 @@ classdef VariantsSet < handle
             obj.InternalGraph = graph(edgesTable, nodesTable);
 
             obj.InternalDigraph = iGraphToDigraph(obj.InternalGraph);
-            obj.InternalDigraph.Edges.IsProximal = iFindProximalNodes(obj.InternalDigraph.Edges);
+            obj.InternalDigraph.Edges.IsProximal = iFindProximalNodes(obj.InternalDigraph);
 
             obj.DistanceTable = iCreateDistanceTable(obj.InternalDigraph);
         end
@@ -414,7 +414,7 @@ for ii = 1:numWords
     for jj = (ii+1):numWords
         endNodes(k, :) = [ii, jj];
         weights(k) = distanceFunction( ...
-            dataTable.Variant(ii), dataTable.Variant(jj));
+            dataTable.Name(ii), dataTable.Name(jj));
         k = k+1;
     end
 end
@@ -427,7 +427,7 @@ end
 function nodeTable = iCreateNodesTable(dataTable)
 % Create the table of nodes for the plot
 
-nodeTable = dataTable(:, {'Variant', 'Attributes', 'IsStandard'});
+nodeTable = dataTable(:, {'Name', 'Attributes', 'IsStandard'});
 end
 
 
@@ -466,23 +466,23 @@ end
 end
 
 
-function isProximal = iFindProximalNodes(edgesTable)
+function isProximal = iFindProximalNodes(directGraph)
 % Compute edges that won't show in the final graph
 
-numEdges = height(edgesTable);
-numNodes = iNumNodesFromEdges(edgesTable);
-isProximal = false(numEdges, 1);
-weights = edgesTable.Weight;
+isProximal = false(directGraph.numedges(), 1);
+weights = directGraph.Edges.Weight;
 
-for ii = 1:numNodes
-    currEdgeSelector = edgesTable.EndNodes(:, 1) == ii;
-    if ~any(currEdgeSelector)
+for ii = 1:directGraph.numnodes()
+    currNode = string(directGraph.Nodes.Name{ii});
+
+    outEdgesIdx = directGraph.outedges(currNode);
+    if ~any(outEdgesIdx)
         continue;
     end
 
-    minWeight = min(weights(currEdgeSelector));
-    weightsOfInterest = weights==minWeight;
-    currProximal = currEdgeSelector & weightsOfInterest;
+    outEdgesWeights = weights(outEdgesIdx);
+    weightsOfInterest = outEdgesWeights==min(outEdgesWeights);
+    currProximal = outEdgesIdx(weightsOfInterest);
     isProximal(currProximal) = true;
 end
 end
@@ -514,23 +514,11 @@ function distanceTable = iCreateDistanceTable(internalDigraph)
 % Given the digraph object, create a table summary.
 
 digraphEdges = internalDigraph.Edges;
-digraphNodes = internalDigraph.Nodes;
-startVariant = digraphNodes.Variant(digraphEdges.EndNodes(:, 1));
-endVariant = digraphNodes.Variant(digraphEdges.EndNodes(:, 2));
+startVariant = digraphEdges.EndNodes(:, 1);
+endVariant = digraphEdges.EndNodes(:, 2);
 
 distanceTable = table(startVariant, endVariant, digraphEdges.Weight, digraphEdges.IsProximal);
 distanceTable.Properties.VariableNames = {'StartVariant', 'EndVariant', 'Distance', 'IsProximal'};
-
-numEdges = height(digraphEdges);
-isBetweenCategories = false([numEdges, 1]);
-getCategoriesOfNodeIndex = @(index) [digraphNodes.Attributes{index}.Category];
-
-for k = 1:numEdges
-    startCategories = getCategoriesOfNodeIndex(digraphEdges.EndNodes(k, 1));
-    endCategories = getCategoriesOfNodeIndex(digraphEdges.EndNodes(k, 2));
-    isBetweenCategories(k) = isempty(intersect(startCategories, endCategories));
-end
-distanceTable.IsBetweenCategories = isBetweenCategories;
 end
 
 
