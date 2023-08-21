@@ -451,7 +451,7 @@ for k = 1:inputLength
             attributeToAdd = VariantAttribute(...
                 currAttribute, ...
                 currElementIsStandard);
-        elseif isa(categoriesOrAttributes, 'VariantAttribute')
+        elseif isa(currAttribute, 'VariantAttribute')
             attributeToAdd = currAttribute;
         else
             error("Invalid specification of the attributes of variant number %d: the input should be a cell array, where each cell contains either an array of strings or an array of VariantAttribute objects.", k);

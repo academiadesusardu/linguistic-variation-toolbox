@@ -3,9 +3,6 @@ function currAxis = plotBoxScatter(data, group, xTickLabels)
 
 % Copyright 2023 Acadèmia de su Sardu APS
 numGroups = numel(unique(group));
-
-% New figure
-figure();
 currAxis = gca();
 boxWidth = 0.5;
 

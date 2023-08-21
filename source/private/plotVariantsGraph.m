@@ -4,8 +4,8 @@ function [plotObject, plotGraph] = plotVariantsGraph(inputGraph, options)
 
 % Copyright 2023 Acadèmia de su Sardu APS
 
-currFigure = figure();
-currAxes = axes(currFigure, Visible="off");
+currFigure = gcf();
+currAxes = axes(currFigure, Visible="off", Color="none");
 
 plotGraph = inputGraph;
 
