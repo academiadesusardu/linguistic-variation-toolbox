@@ -9,15 +9,15 @@ function dataSet = readDataFile(inputFile)
 jsonContent = jsondecode(fileread(inputFile));
 if numel(jsonContent)==1
     jsonContent = struct2cell(jsonContent);
-    dataSet = cellfun(@iStruct2VariantsSet, jsonContent);
+    dataSet = cellfun(@iStruct2SetOfVariants, jsonContent);
 else
-    dataSet = iStruct2VariantsSet(jsonContent);
+    dataSet = iStruct2SetOfVariants(jsonContent);
 end
 end
 
 
-function outSet = iStruct2VariantsSet(inStruct)
-% Convert the input struct to an output table of the expected format.
+function outSet = iStruct2SetOfVariants(inStruct)
+% Convert the input struct to a SetOfVariants object.
 if isfield(inStruct, "Attributes")
     tempTable = struct2table(inStruct, AsArray=true);
     if isstruct(tempTable.Attributes)
@@ -25,19 +25,19 @@ if isfield(inStruct, "Attributes")
     end
     tempTable.Attributes = cellfun(@iStruct2Attributes, tempTable.Attributes, ...
         UniformOutput=false);
-    outSet = VariantsSet(tempTable.Variant, tempTable.Attributes);
+    outSet = SetOfVariants(tempTable.Variant, tempTable.Attributes);
 else
     tempTable = struct2table(inStruct);
     tempTable.Categories = cellfun(@string, tempTable.Categories, ...
         UniformOutput=false);
-    outSet = VariantsSet(tempTable.Variant, tempTable.Categories, tempTable.IsStandard);
+    outSet = SetOfVariants(tempTable.Variant, tempTable.Categories, tempTable.IsCategoryReference);
 end
 end
 
 
 function attributes = iStruct2Attributes(attributeStructs)
 % Convert an array of attribute structs to an array of VariantAttribute
-attributes = arrayfun(@(s) VariantAttribute(string(s.Category), logical(s.IsStandard)), ...
+attributes = arrayfun(@(s) VariantAttribute(string(s.Category), logical(s.IsCategoryReference)), ...
     attributeStructs, ...
     UniformOutput=true);
 end

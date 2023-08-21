@@ -129,7 +129,7 @@ for k = 1:tableHeight
         styleIndex = iGetCategoryIndex(currCategory);
     end
 
-    if nodeTable.IsStandard(k)
+    if nodeTable.IsCategoryReference(k)
         nodeMarkers(k) = "pentagram";
         nodeMarkerSize(k) = 6;
     else

@@ -1,43 +1,43 @@
-classdef VariantsSet < handle
-    %VARIANTSSET A set of variants of the same word.
+classdef SetOfVariants < handle
+    %SETOFVARIANTS A set of variants of the same word.
     %
-    %   G = VariantsSet(VN, VR)
+    %   G = SetOfVariants(VN, VR)
     %       Construct the object given:
     %           - The array of variants VN
     %           - The corresponding categories VR
     %       To determine the statistics, use a simple Levenshtein distance.
     %
-    %   G = VariantsSet(VN, VR, S)
+    %   G = SetOfVariants(VN, VR, S)
     %       Construct the object given VN, VR, and:
     %           - a logical array S stating whether the variant
-    %             is standard or not.
+    %             is the category's reference or not.
     %       To determine the statistics, use a simple Levenshtein distance.
     %
-    %   G = VariantsSet(VN, VA)
+    %   G = SetOfVariants(VN, VA)
     %       Construct the object given VN and:
     %           - a cell array of variant attributes VA specifying the
     %             attributes of every variant in VN.
     %       To determine the statistics, use a simple Levenshtein distance.
     %
-    %   G = VariantsSet(__, DistanceFunction=F)
+    %   G = SetOfVariants(__, DistanceFunction=F)
     %       Construct the object with the syntax(es) in the previous examples,
     %       but also specify a custom distance function.
     %
     %
-    % VariantsSet properties:
+    % SetOfVariants properties:
     %   VariantTable     - A summary of all the data about the variants.
     %   DistanceTable    - All distances between variants.
     %   DistanceFunction - The metric used to compute distances.
     %
-    % VariantsSet methods:
+    % SetOfVariants methods:
     %   getNumberOfVariants     - Get the number of variants represented by
     %                             the current object.
-    %   isStandard              - Given a variant, check if it is standard
-    %                             or not.
+    %   isCategoryReference     - Given a variant, check if it is the
+    %                             category's referene.
     %   getDistanceBetween      - Get the distance between two or more variants
     %                             according to the DistanceFunction metric.
     %   getCategoriesOf         - Get the categories of one or more variants.
-    %   getStandardIn           - Get the standard in a given category.
+    %   getCategoryReferenceIn  - Get the reference in a given category.
     %   getVariantsIn           - Get the variants in a given category.
     %   computeStatistics       - Compute some statistics on the given set of
     %                             variants and display them to screen.
@@ -50,21 +50,23 @@ classdef VariantsSet < handle
     %   allCategories(["camp", "log"]);
     %   variants = ["ocisòrgiu", "ochisorzu", "bochisorzu"];
     %   categories = {"camp", "log", "log"};
-    %   isStandard = [true, false, true];
-    %   set = VariantsSet(variants, categories, isStandard);
+    %   isCategoryReference = [true, false, true];
+    %   set = SetOfVariants(variants, categories, isCategoryReference);
     %   plot(set);
 
     % Copyright 2023 Acadèmia de su Sardu APS
 
     properties(SetAccess=immutable)
+        % The distance function that was used to compute the statistics
+        DistanceFunction
+    end
+
+    properties(Dependent)
         % All the data that was provided about the variants
         VariantTable
 
         % All the data that was computed about the distances
         DistanceTable
-
-        % The distance function that was used to compute the statistics
-        DistanceFunction
     end
 
     properties(Access=private)
@@ -73,33 +75,29 @@ classdef VariantsSet < handle
 
         % Internal digraph object used for statistics and plotting
         InternalDigraph
-
-        % The table of distances between variants. Each distance appears
-        % only once.
-        UniqueDistances
     end
 
+
     methods
-        function obj = VariantsSet(variants, categoriesOrAttributes, isStandard, options)
+        function obj = SetOfVariants(variants, categoriesOrAttributes, isCategoryReference, options)
             %VARIANTSSET Construct an object representing a set of
             % variants of the same word
             arguments
                 variants {mustBeText}
                 categoriesOrAttributes cell
-                isStandard logical = false(length(variants), 1)
+                isCategoryReference logical = false(length(variants), 1)
                 options.DistanceFunction (1,1) function_handle = @simpleLevenshtein
             end
             variants = reshape(string(variants), [], 1);
             assert(numel(unique(variants))==numel(variants), ...
                 "The elements in the variant array are not unique.")
 
-            [attributes, isStandard] = ...
-                iComputeAttributes(categoriesOrAttributes, isStandard);
+            [attributes, isCategoryReference] = ...
+                iComputeAttributes(categoriesOrAttributes, isCategoryReference);
 
-            dataTable = table(variants, attributes, isStandard);
-            dataTable.Properties.VariableNames = {'Name', 'Attributes', 'IsStandard'};
+            dataTable = table(variants, attributes, isCategoryReference);
+            dataTable.Properties.VariableNames = {'Name', 'Attributes', 'IsCategoryReference'};
 
-            obj.VariantTable = dataTable;
             obj.DistanceFunction = options.DistanceFunction;
 
             nodesTable = iCreateNodesTable(dataTable);
@@ -109,7 +107,28 @@ classdef VariantsSet < handle
             obj.InternalDigraph = iGraphToDigraph(obj.InternalGraph);
             obj.InternalDigraph.Edges.IsProximal = iFindProximalNodes(obj.InternalDigraph);
 
-            obj.DistanceTable = iCreateDistanceTable(obj.InternalDigraph);
+            obj.checkCategoryReferences();
+        end
+
+
+        function data = get.VariantTable(obj)
+            % Compute the variant table that can be used by the
+            % user.
+            internalData = obj.InternalGraph.Nodes;
+            data = renamevars(internalData, {'Name'}, {'Variant'});
+        end
+
+
+        function data = get.DistanceTable(obj)
+            % Compute the table of distances that can be displayed by the
+            % user.
+            internalData = obj.InternalDigraph.Edges;
+            internalData.FromVariant = internalData.EndNodes(:, 1);
+            internalData.ToVariant = internalData.EndNodes(:, 2);
+            internalData = removevars(internalData, {'EndNodes'});
+            internalData = movevars(internalData, {'Weight'}, After={'ToVariant'});
+            internalData = movevars(internalData, {'IsProximal'}, After={'Weight'});
+            data = internalData;
         end
 
 
@@ -119,7 +138,17 @@ classdef VariantsSet < handle
             % Syntax:
             %   N = getNumberOfVariants(S)
             %       Return the number of variants
-            numVariants = height(obj.VariantTable);
+            numVariants = numnodes(obj.InternalGraph);
+        end
+
+
+        function variants = getAllVariants(obj)
+            %GETALLVARIANTS Get all the variants in the set
+            %
+            % Syntax:
+            %   V = getAllVariants(S)
+            %       Return all the variants
+            variants = string(obj.InternalGraph.Nodes.Name);
         end
 
 
@@ -133,8 +162,11 @@ classdef VariantsSet < handle
                 obj (1,1)
                 variant (1, 1) string
             end
-            variantSelector = obj.selectVariant(variant);
-            categories = [obj.VariantTable.Attributes{variantSelector}.Category];
+            variantIndex = obj.InternalGraph.findnode(variant);
+            assert(variantIndex~=0, "The variant is not in the set.");
+
+            variantAttributes = obj.InternalGraph.Nodes.Attributes{variantIndex};
+            categories = [variantAttributes.Category];
         end
 
 
@@ -151,64 +183,65 @@ classdef VariantsSet < handle
             end
             validateCategory(category);
 
+            allVariants = obj.getAllVariants();
             categoriesPerVariant = arrayfun(@(v) obj.getCategoriesOf(v), ...
-                obj.VariantTable.Variant, ...
+                allVariants, ...
                 UniformOutput=false);
             isOfThisCategory = cellfun(@(categories) ismember(category, categories), ...
                 categoriesPerVariant, ...
                 UniformOutput=true);
-            variants = obj.VariantTable.Variant(isOfThisCategory);
+            variants = allVariants(isOfThisCategory);
         end
 
 
-        function tf = isStandard(obj, variant)
-            %ISSTANDARD Return true if the given variant the standard of
+        function tf = isCategoryReference(obj, variant)
+            %ISCATEGORYREFERENCE Return true if the given variant the reference of
             %one or more categories.
             %
             % Syntax:
-            %   TF = isStandard(S, V)
-            %       Check if variant V is standard.
+            %   TF = isCategoryReference(S, V)
+            %       Check if variant V is a reference.
             arguments
                 obj (1,1)
                 variant (1, 1) string
             end
-            variantSelector = obj.selectVariant(variant);
-            tf = any([obj.VariantTable.Attributes{variantSelector}.IsStandard]);
+            variantIndex = obj.InternalGraph.findnode(variant);
+            assert(variantIndex~=0, "The variant is not in the set.");
+
+            variantAttributes = obj.InternalGraph.Nodes.Attributes{variantIndex};
+            tf = any([variantAttributes.IsCategoryReference]);
         end
 
 
-        function variants = getStandardIn(obj, category)
-            %GETSTANDARDIN Get the standard variant in the given category.
+        function references = getCategoryReferenceIn(obj, category)
+            %GETCATEGORYREFERENCEIN Get the reference variant in the given category.
             %
             % Syntax:
-            %   S = getStandardIn(S, C)
-            %       Get the standard variant in category C.
+            %   S = getCategoryReferenceIn(S, C)
+            %       Get the reference variant in category C.
             arguments
                 obj (1,1)
                 category (1, 1) string
             end
             validateCategory(category);
 
-            variants = repmat("", [obj.getNumberOfVariants(), 1]);
-            numFoundVariants = 0;
+            variantsInCategory = obj.getVariantsIn(category);
+            numVariantsInCategory = numel(variantsInCategory);
+            references = repmat("", numVariantsInCategory, 1);
+            numReferences = 0;
 
-            for k = 1:obj.getNumberOfVariants()
-                currVariant = obj.VariantTable.Variant(k);
-                currAttributes = obj.VariantTable.Attributes{k};
+            for k = 1:numVariantsInCategory
+                currVariant = variantsInCategory(k);
+                currAttributes = obj.InternalGraph.Nodes.Attributes{k};
 
                 for j = 1:numel(currAttributes)
-                    if currAttributes(j).Category==category && currAttributes(j).IsStandard
-                        variants(numFoundVariants+1) = currVariant;
-                        numFoundVariants = numFoundVariants+1;
+                    if currAttributes(j).Category==category && currAttributes(j).IsCategoryReference
+                        references(numReferences+1) = currVariant;
+                        numReferences = numReferences + 1;
                     end
                 end
             end
-
-            if numFoundVariants == 0
-                variants = [];
-            elseif numFoundVariants < length(variants)
-                variants(numFoundVariants+1:end) = [];
-            end
+            references(references=="") = [];
         end
 
 
@@ -221,14 +254,17 @@ classdef VariantsSet < handle
             %   D = getDistanceBetween(S, V1, V2)
             %       Get the distance between all the variants in V1 and all
             %       the variants in V2.
-            uniqueDistances = obj.getUniqueDistancesTable();
 
-            selectEdges = @(r) iSelectVariantCouple(r, firstVariants, secondVariants);
-            currEdgesSelector = table2array(rowfun(selectEdges, ...
-                uniqueDistances, ...
-                InputVariables='EndVariants'));
-            currEdges = uniqueDistances(currEdgesSelector, :);
-            uniqueDistances = currEdges.Distance;
+            numFirstVariants = numel(firstVariants);
+            uniqueDistances = cell(numFirstVariants, 1);
+            for ii = 1:numel(firstVariants)
+                currFirstVariant = repmat(firstVariants(ii), size(secondVariants));
+                currEdgeIndices = obj.InternalGraph.findedge(currFirstVariant, secondVariants);
+                currEdgeIndices(currEdgeIndices==0) = [];
+
+                uniqueDistances{ii} = obj.InternalGraph.Weight(currEdgeIndices);
+            end
+            uniqueDistances = cell2num(uniqueDistances);
         end
 
 
@@ -252,12 +288,12 @@ classdef VariantsSet < handle
             %   [PO, G] = plot(VS, PlacementAlgorithm=M)
             %       Specify the placement algorithm: "force", i.e.
             %       force-directed graph plot, or "mds", i.e.
-            %       multi-dimensional scaling. By default, it's "force".
+            %       multi-dimensional scaling. By default, it's "mds".
             arguments
                 obj (1,1)
                 options.CenterCategories (1, 2) string
                 options.Mode (1, 1) = getCompletePlotModeString()
-                options.PlacementAlgorithm (1, 1) = getForcePlacementAlgorithmString()
+                options.PlacementAlgorithm (1, 1) = getMdsPlacementAlgorithmString()
             end
             options.Mode = iCheckPlotOption(options.Mode, ...
                 [getCompletePlotModeString(), getProximalPlotModeString()], ...
@@ -303,8 +339,7 @@ classdef VariantsSet < handle
 
                 if numCurrCategories == 0
                     currLabel = "All";
-                    wholeUniqueTable = obj.getUniqueDistancesTable();
-                    currData = wholeUniqueTable.Distance;
+                    currData = obj.InternalGraph.Edges.Weight;
                 elseif numCurrCategories == 1
                     currLabel = currCategories;
                     currCategories = [currCategories, currCategories]; %#ok<AGROW>
@@ -339,7 +374,7 @@ classdef VariantsSet < handle
             %
             % Syntax:
             %   ST = computeStatistics(S)
-            %       Print all all the statistics about the VariantsSet object
+            %       Print all all the statistics about the SetOfVariants object
             %       S and return them as a struct.
             %
             %   S = computeStatistics(__, Quiet=Q)
@@ -366,29 +401,16 @@ classdef VariantsSet < handle
         end
     end
 
-
     methods(Access=private)
-        function variantSelector = selectVariant(obj, variant)
-            % Select the input variant in the VariantTable.
-            variantSelector = obj.VariantTable.Variant == variant;
-            assert(any(variantSelector), ...
-                "The input variant was not found in this set.")
-        end
+        function checkCategoryReferences(obj)
+            % Check that there is max one category reference per category
 
-
-        function uniqueDistances = getUniqueDistancesTable(obj)
-            % Get all the distances between variants, counting them only
-            % once
-            if isempty(obj.UniqueDistances)
-                rowsOfInterest = obj.DistanceTable(:, ["StartVariant", "EndVariant", "Distance"]);
-                rowsOfInterest.EndVariants = [rowsOfInterest.StartVariant, rowsOfInterest.EndVariant];
-                rowsOfInterest = removevars(rowsOfInterest, ["StartVariant", "EndVariant"]);
-
-                % Divide EndVariants into cells
-                rowsOfInterest.EndVariants = iSortEndVariantCouples(rowsOfInterest.EndVariants);
-                obj.UniqueDistances = unique(rowsOfInterest);
+            categories = allCategories();
+            for k = 1:numel(categories)
+                categoryReference = obj.getCategoryReferenceIn(categories(k));
+                assert(numel(categoryReference)<=1, ...
+                    "There can be only reference per category");
             end
-            uniqueDistances = obj.UniqueDistances;
         end
     end
 end
@@ -427,16 +449,16 @@ end
 function nodeTable = iCreateNodesTable(dataTable)
 % Create the table of nodes for the plot
 
-nodeTable = dataTable(:, {'Name', 'Attributes', 'IsStandard'});
+nodeTable = dataTable(:, {'Name', 'Attributes', 'IsCategoryReference'});
 end
 
 
-function [attributes, isActuallyStandard] = iComputeAttributes(categoriesOrAttributes, isStandard)
+function [attributes, isActuallyCategoryReference] = iComputeAttributes(categoriesOrAttributes, isCategoryReference)
 % Compute all the attributes of the variants
 
 inputLength = length(categoriesOrAttributes);
 attributes = cell(inputLength, 1);
-isActuallyStandard = false(inputLength, 1);
+isActuallyCategoryReference = false(inputLength, 1);
 
 for k = 1:inputLength
     currElement = categoriesOrAttributes{k};
@@ -447,10 +469,10 @@ for k = 1:inputLength
         if isstring(currAttribute)
             validateCategory(currAttribute);
 
-            currElementIsStandard = isStandard(k);
+            currElementIsCategoryReference = isCategoryReference(k);
             attributeToAdd = VariantAttribute(...
                 currAttribute, ...
-                currElementIsStandard);
+                currElementIsCategoryReference);
         elseif isa(currAttribute, 'VariantAttribute')
             attributeToAdd = currAttribute;
         else
@@ -458,10 +480,10 @@ for k = 1:inputLength
         end
         currElementAttributes = [currElementAttributes; attributeToAdd]; %#ok<AGROW>
     end
-    currElementIsActuallyStandard = any([currElementAttributes.IsStandard]);
+    currElementIsActuallyCategoryReference = any([currElementAttributes.IsCategoryReference]);
 
     attributes{k} = currElementAttributes;
-    isActuallyStandard(k) = currElementIsActuallyStandard;
+    isActuallyCategoryReference(k) = currElementIsActuallyCategoryReference;
 end
 end
 
@@ -569,7 +591,7 @@ end
 end
 
 
-function text = iPrintTableToText(aTable, indentationLevel) %#ok<INUSD> 
+function text = iPrintTableToText(aTable, indentationLevel) %#ok<INUSD>
 text = string(evalc('disp(aTable)'));
 
 textLines = splitlines(text);

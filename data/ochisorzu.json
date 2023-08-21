@@ -2,126 +2,126 @@
  {
    "Variant": "acidroxu",
    "Categories": ["C"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "acisòlgiu",
    "Categories": ["C"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "acisòrgiu",
    "Categories": ["C"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "ancisòrgiu",
    "Categories": ["C"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "antzisorxu",
    "Categories": ["C"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "arcisòrgiu",
    "Categories": ["C"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "atzidroxu",
    "Categories": ["C"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "atzisòlgiu",
    "Categories": ["C"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "atzisòrgiu",
    "Categories": ["C"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "ochisòrgiu",
    "Categories": ["C"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "ocidòrgiu",
    "Categories": ["C"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "schisòrgiu",
    "Categories": ["C"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "ocisòrgiu",
    "Categories": ["C"],
-   "IsStandard": 1
+   "IsCategoryReference": 1
  },
  {
    "Variant": "ochisorzu",
    "Categories": ["L"],
-   "IsStandard": 1
+   "IsCategoryReference": 1
  },
  {
    "Variant": "achisògliu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "achisorju",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "bochisorzu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "chisògliu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "chisorju",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "chisòrgiu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "chisorzu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "isòrgiu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "ochisògliu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "ochisolzu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "ochisorju",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  }
 ]

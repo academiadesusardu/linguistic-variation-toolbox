@@ -1,0 +1,15 @@
+[{
+    "Variant": [
+            "a"
+        ],
+        "Attributes": [
+            {
+                "Category": "C",
+                "IsStandard": true
+            },
+            {
+                "Category": "L",
+                "IsStandard": true
+            }
+        ]
+}]

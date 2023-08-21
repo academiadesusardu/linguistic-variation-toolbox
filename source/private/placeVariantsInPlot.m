@@ -11,7 +11,9 @@ weights = aGraph.Edges.Weight;
 
 distances = zeros(numNodes);
 for k = 1:numEdges
-    distances(endNodes(k, 1), endNodes(k, 2)) = weights(k);
+    fromIndex = aGraph.findnode(endNodes(k, 1));
+    toIndex = aGraph.findnode(endNodes(k, 2));
+    distances(fromIndex, toIndex) = weights(k);
 end
 if istriu(distances)
     distances = distances + distances';

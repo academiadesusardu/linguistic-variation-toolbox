@@ -16,8 +16,8 @@ tf = cellfun(@(e) any([e.Category]==category), allData.Attributes);
 end
 
 
-function tf = iIsStandardOfCategory(allData, category)
-tf = cellfun(@(e) any([e.Category]==category & [e.IsStandard]), allData.Attributes);
+function tf = iIsCategoryReferenceOfCategory(allData, category)
+tf = cellfun(@(e) any([e.Category]==category & [e.IsCategoryReference]), allData.Attributes);
 end
 
 
@@ -28,8 +28,8 @@ end
 
 function [angle, centerCoords] = iFindCenter(graphPlot, nodeTable, firstCategory, secondCategory)
 plotData = table(graphPlot.XData', graphPlot.YData', graphPlot.NodeLabel', ...
-    VariableNames={'X', 'Y', 'Variant'});
-allData = join(plotData, nodeTable, Keys={'Variant'});
+    VariableNames={'X', 'Y', 'Name'});
+allData = join(plotData, nodeTable, Keys={'Name'});
 
 plotAxes = graphPlot.Parent;
 xWidth = iComputeWidth(xlim(plotAxes));
@@ -37,30 +37,30 @@ xWidth = iComputeWidth(xlim(plotAxes));
 allData.IsFirstCategory = iIsCategory(allData, firstCategory);
 allData.IsSecondCategory = iIsCategory(allData, secondCategory);
 
-firstStandardIndex = find(iIsStandardOfCategory(allData, firstCategory));
-secondStandardIndex = find(iIsStandardOfCategory(allData, secondCategory));
+firstCategoryReferenceIndex = find(iIsCategoryReferenceOfCategory(allData, firstCategory));
+secondCategoryReferenceIndex = find(iIsCategoryReferenceOfCategory(allData, secondCategory));
 
-if numel(firstStandardIndex)==1
-    firstStandardCoords = [allData.X(firstStandardIndex), allData.Y(firstStandardIndex)];
+if numel(firstCategoryReferenceIndex)==1
+    firstCategoryReferenceCoords = [allData.X(firstCategoryReferenceIndex), allData.Y(firstCategoryReferenceIndex)];
 end
-if numel(secondStandardIndex)==1
-    secondStandardCoords = [allData.X(secondStandardIndex), allData.Y(secondStandardIndex)];
+if numel(secondCategoryReferenceIndex)==1
+    secondCategoryReferenceCoords = [allData.X(secondCategoryReferenceIndex), allData.Y(secondCategoryReferenceIndex)];
 end
 
-if numel(firstStandardIndex)==1 && numel(secondStandardIndex)==0
-    centerCoords = firstStandardCoords;
+if numel(firstCategoryReferenceIndex)==1 && numel(secondCategoryReferenceIndex)==0
+    centerCoords = firstCategoryReferenceCoords;
     centerCoords(1) = centerCoords(1)+xWidth/4;
     angle = 0;
-elseif numel(firstStandardIndex)==0 && numel(secondStandardIndex)==1
-    centerCoords = secondStandardCoords;
+elseif numel(firstCategoryReferenceIndex)==0 && numel(secondCategoryReferenceIndex)==1
+    centerCoords = secondCategoryReferenceCoords;
     centerCoords(1) = centerCoords(1)-xWidth/4;
     angle = 0;
-elseif numel(firstStandardIndex)==1 && numel(secondStandardIndex)==1
-    betweenStandardCoords = secondStandardCoords-firstStandardCoords;
-    centerCoords = firstStandardCoords+betweenStandardCoords./2;
-    [theta, ~] = cart2pol(betweenStandardCoords(1), betweenStandardCoords(2));
+elseif numel(firstCategoryReferenceIndex)==1 && numel(secondCategoryReferenceIndex)==1
+    betweenCategoryReferenceCoords = secondCategoryReferenceCoords-firstCategoryReferenceCoords;
+    centerCoords = firstCategoryReferenceCoords+betweenCategoryReferenceCoords./2;
+    [theta, ~] = cart2pol(betweenCategoryReferenceCoords(1), betweenCategoryReferenceCoords(2));
     angle = -theta;
 else
-    error("Invalid specification of standards to reference in the plot");
+    error("Invalid specification of references in the plot");
 end
 end

@@ -2,146 +2,146 @@
  {
    "Variant": "gennaju",
    "Categories": ["C"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "gennàlgiu",
    "Categories": ["C"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "gennarxu",
    "Categories": ["C"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "gennaxu",
    "Categories": ["C"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "grennaxu",
    "Categories": ["C"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "bennalzu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "bennardu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "bennarzu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "bennasu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "bennazu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "cennalzu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "ciannalzu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "gennàgliu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "gennalzu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "gennarzu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "ghennàgiu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "ghennàrgiu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "ghenuàgiu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "giannàgliu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "giannàrgiu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "giannarju",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "giannarzu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "jannarju",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "zannarju",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "zannarzu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "zennarju",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "zennarzu",
    "Categories": ["L"],
-   "IsStandard": 0
+   "IsCategoryReference": 0
  },
  {
    "Variant": "gennàrgiu",
    "Categories": ["C"],
-   "IsStandard": 1
+   "IsCategoryReference": 1
  },
  {
    "Variant": "ghennarzu",
    "Categories": ["L"],
-   "IsStandard": 1
+   "IsCategoryReference": 1
  }
 ]

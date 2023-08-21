@@ -4,34 +4,34 @@
     "Categories": [
       "C"
     ],
-    "IsStandard": 1
+    "IsCategoryReference": 1
   },
   {
     "Variant": "anturxu",
     "Categories": [
       "C"
     ],
-    "IsStandard": 0
+    "IsCategoryReference": 0
   },
   {
     "Variant": "bentruxu",
     "Categories": [
       "C"
     ],
-    "IsStandard": 0
+    "IsCategoryReference": 0
   },
   {
     "Variant": "benturzu",
     "Categories": [
       "L"
     ],
-    "IsStandard": 1
+    "IsCategoryReference": 1
   },
   {
     "Variant": "guturzu",
     "Categories": [
       "L"
     ],
-    "IsStandard": 0
+    "IsCategoryReference": 0
   }
 ]
