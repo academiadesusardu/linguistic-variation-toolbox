@@ -5,6 +5,10 @@ function aPlot = placeVariantsInPlot(aPlot, aGraph)
 % Copyright 2023 Acadèmia de su Sardu APS
 
 numNodes = aGraph.numnodes();
+if numNodes==1
+    return
+end
+
 numEdges = aGraph.numedges();
 endNodes = aGraph.Edges.EndNodes;
 weights = aGraph.Edges.Weight;
@@ -20,12 +24,15 @@ if istriu(distances)
 end
 
 scaledData = cmdscale(distances, 2);
-iPrintError(distances, scaledData);
 
-aPlot.XData = scaledData(:, 1);
-aPlot.YData = scaledData(:, 2);
+if size(scaledData, 2)==2
+    iPrintError(distances, scaledData);
+    aPlot.XData = scaledData(:, 1);
+    aPlot.YData = scaledData(:, 2);
+else
+    disp("Falling back to the 'force' layout algorithm.")
 end
-
+end
 
 function iPrintError(distances, scaledData)
 selectLower = logical(tril(ones(size(distances)),-1));

@@ -13,8 +13,16 @@ plotGraph = inputGraph;
     plotGraph.Nodes.Color, ...
     plotGraph.Nodes.MarkerSize] = iGetNodesSpec(plotGraph.Nodes);
 plotGraph.Nodes.Color = iGetRgbColor(plotGraph.Nodes.Color);
-[plotGraph.Edges.Color, ...
-    plotGraph.Edges.Width] = iGetEdgesSpec(plotGraph.Edges.Weight);
+plotGraph.Edges.Weight(plotGraph.Edges.Weight==0) = eps;
+[edgeColor, ...
+    edgeWidth] = iGetEdgesSpec(plotGraph.Edges.Weight);
+if isempty(edgeColor)
+    edgeColor = "none";
+    edgeWidth = 1;
+else
+    plotGraph.Edges.Color = edgeColor;
+    plotGraph.Edges.Width = edgeWidth;
+end
 
 if options.PlacementAlgorithm == getForcePlacementAlgorithmString()
     iterations = 5e3;
@@ -29,8 +37,8 @@ plotObject = plot(plotGraph, ...
     NodeFontWeight="bold", ...
     Marker=plotGraph.Nodes.Marker, ...
     MarkerSize=plotGraph.Nodes.MarkerSize, ...
-    EdgeColor=plotGraph.Edges.Color, ...
-    LineWidth=plotGraph.Edges.Width, ...
+    EdgeColor=edgeColor, ...
+    LineWidth=edgeWidth, ...
     Layout="force", ...
     WeightEffect='direct', ...
     Iterations=iterations);
@@ -53,7 +61,7 @@ colorBar = iSetColorBarTicks(colorBar, size(colorMap, 1));
 colorBar.Label.String = "Edge colour: distance between variants";
 
 edgeTable = plotGraph.Edges;
-if options.Mode == getProximalPlotModeString()
+if options.Mode == getProximalPlotModeString() && height(edgeTable)>0
     lineStyle = cell(height(edgeTable), 1);
     lineStyle(edgeTable.IsProximal) = repmat({'-'}, [sum(edgeTable.IsProximal), 1]);
     lineStyle(~edgeTable.IsProximal) = repmat({'none'}, [sum(~edgeTable.IsProximal), 1]);
@@ -64,6 +72,12 @@ end
 
 function [edgesColor, edgesWidth] = iGetEdgesSpec(weights)
 colorMap = iColorMap(weights);
+if isempty(weights)
+    edgesColor = [];
+    edgesWidth = [];
+    return
+end
+
 [colors, widths] = arrayfun(@(w) iEdgeComputeColorAndWidth(w, colorMap), ...
     weights, UniformOutput=false);
 edgesColor = cell2mat(colors);
@@ -81,6 +95,10 @@ end
 
 
 function colorBar = iSetColorBarTicks(colorBar, numColors)
+if numColors==0
+    return
+end
+
 ticks = linspace(0, 1, 2*numColors + 1);
 colorBar.Ticks = ticks;
 colorBar.TickLength = 0;
@@ -154,10 +172,15 @@ end
 function [color, width] = iEdgeComputeColorAndWidth(weight, colorMap)
 % Given the edge's weight, determine what it should look like
 maxColors = size(colorMap, 1);
-index = weight;
-if index>=maxColors
-    index = maxColors;
+if isempty(colorMap)
+    color = [];
+    width = [];
+    return
 end
+
+index = weight;
+index(index<=1) = 1;
+index(index>=maxColors) = maxColors;
 color = colorMap(index, :);
 
 width = 0.25;

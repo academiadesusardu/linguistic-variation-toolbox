@@ -12,8 +12,13 @@ maxYDiff = iMaxDistance(yData, centerCoordinates(2));
 plotAxis = aPlot.Parent;
 finalYWidth = maxYDiff*1.4;
 finalXWidth = maxXDiff*1.4;
-ylim(plotAxis, [centerCoordinates(2)-finalYWidth, centerCoordinates(2)+finalYWidth]);
-xlim(plotAxis, [centerCoordinates(1)-finalXWidth, centerCoordinates(1)+finalXWidth]);
+
+if finalYWidth>0
+    ylim(plotAxis, [centerCoordinates(2)-finalYWidth, centerCoordinates(2)+finalYWidth]);
+end
+if finalXWidth>0
+    xlim(plotAxis, [centerCoordinates(1)-finalXWidth, centerCoordinates(1)+finalXWidth]);
+end
 end
 
 
