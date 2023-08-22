@@ -1,0 +1,23 @@
+[
+  {
+    "Variant": "bentùrgiu",
+    "Categories": [
+      "C"
+    ],
+    "IsCategoryReference": 1
+  },
+  {
+    "Variant": "anturxu",
+    "Categories": [
+      "C"
+    ],
+    "IsCategoryReference": 0
+  },
+  {
+    "Variant": "bentruxu",
+    "Categories": [
+      "C"
+    ],
+    "IsCategoryReference": 0
+  }
+]
