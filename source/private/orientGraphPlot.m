@@ -22,9 +22,14 @@ end
 
 
 function baricentre = iComputeCategoryBaricentre(allData, category)
-categorySelector = iIsCategory(allData, category);
-baricentre = [mean(allData.X(categorySelector), "all"), ...
-    mean(allData.Y(categorySelector), "all")];
+isReference = iIsCategoryReferenceOfCategory(allData, category);
+categorySelector = iIsCategory(allData, category) & ~isReference;
+if ~any(categorySelector)
+    baricentre = [allData.X(isReference), allData.Y(isReference)];
+else
+    baricentre = [mean(allData.X(categorySelector), "all"), ...
+        mean(allData.Y(categorySelector), "all")];
+end
 end
 
 
@@ -70,9 +75,9 @@ end
 function [angle, centreCoords] = iComputeCenterAndRotationWrtSingleCategory(categoryReferenceCoords, allData, category, coordsBias, angleBias)
 % Compute the coordinates of the new centre and the rotation angle when you
 % want to centre wrt a single category.
-categorBaricentre = iComputeCategoryBaricentre(allData, category);
+categoryBaricentre = iComputeCategoryBaricentre(allData, category);
 
-betweenBaricentreCoords = categorBaricentre-categoryReferenceCoords;
+betweenBaricentreCoords = categoryBaricentre-categoryReferenceCoords;
 [theta, ~] = cart2pol(betweenBaricentreCoords(1), betweenBaricentreCoords(2));
 
 centreCoords = categoryReferenceCoords;

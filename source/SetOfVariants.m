@@ -232,7 +232,8 @@ classdef SetOfVariants < handle
 
             for k = 1:numVariantsInCategory
                 currVariant = variantsInCategory(k);
-                currAttributes = obj.InternalGraph.Nodes.Attributes{k};
+                currVariantIndex = obj.InternalGraph.findnode(currVariant);
+                currAttributes = obj.InternalGraph.Nodes.Attributes{currVariantIndex};
 
                 for j = 1:numel(currAttributes)
                     if currAttributes(j).Category==category && currAttributes(j).IsCategoryReference
