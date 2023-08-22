@@ -98,7 +98,6 @@ function colorBar = iSetColorBarTicks(colorBar, numColors)
 if numColors==0
     return
 end
-
 ticks = linspace(0, 1, 2*numColors + 1);
 colorBar.Ticks = ticks;
 colorBar.TickLength = 0;
