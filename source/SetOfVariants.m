@@ -389,6 +389,8 @@ classdef SetOfVariants < handle
             numCategories = length(categories);
             stats = struct();
 
+            stats.WholeGraph = computeCategoryStatistics( ...
+                    obj.InternalGraph, []);
             for k = 1:numCategories
                 currCategory = categories(k);
                 stats.("Category" + currCategory) = computeCategoryStatistics( ...
@@ -577,30 +579,50 @@ padding = iPad(indentationLevel);
 for k = 1:numel(allFieldNames)
     currField = allFieldNames(k);
     currFieldContent = aStruct.(currField);
+    currFieldName = string(currField);    
+    currFieldNameFormat = padding + "%" + fieldNameWidth + "s";
+
     if isstruct(currFieldContent)
-        disp(padding + currField + ":" + newline());
+        disp(compose(currFieldNameFormat + ":\n", currFieldName));
         iPrintStatistics(currFieldContent, indentationLevel + 1);
     elseif istable(currFieldContent)
-        disp(padding + currField + ":" + newline());
-        currFieldContent = removevars(currFieldContent, "Attributes");
-        disp(currFieldContent);
-    else
-        disp(compose(padding + "%" + fieldNameWidth + "s:\t") + string(currFieldContent));
+        disp(compose(currFieldNameFormat + ":\n", currFieldName));
+        problematicCol = "Attributes";
+        if ismember(problematicCol, currFieldContent.Properties.VariableNames)
+            currFieldContent = removevars(currFieldContent, problematicCol);
+        end
+        disp(iPrintTableToText(currFieldContent, indentationLevel + 1));
+    else        
+        disp(compose(currFieldNameFormat + ":  %s", ...
+            currFieldName, ...
+            string(currFieldContent)));
     end
 end
 end
 
 
-function text = iPrintTableToText(aTable, indentationLevel) %#ok<INUSD>
+function text = iPrintTableToText(aTable, indentationLevel)
+maxHeight = 20;
+if height(aTable)>maxHeight
+    bottomLine = ["..."; "Table is too long to display here. Only the first lines are shown."];
+    aTable = aTable(1:maxHeight, :); %#ok<NASGU>
+else
+    bottomLine = [];
+end
 text = string(evalc('disp(aTable)'));
 
-textLines = splitlines(text);
+textLines = splitlines(eraseTags(text));
+textLines(end) = [];
 textLines = erase(textLines, regexpPattern('^\s\s'));
+
+if ~isempty(bottomLine)
+    textLines(end-1:end) = bottomLine;
+end
 
 text = join(iPad(indentationLevel) + textLines, newline);
 end
 
 
 function padding = iPad(indentationLevel)
-padding = string(repmat(' ', [1, indentationLevel]));
+padding = string(repmat('  ', [1, indentationLevel]));
 end
