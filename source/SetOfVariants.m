@@ -391,7 +391,7 @@ classdef SetOfVariants < handle
             stats = struct();
 
             stats.WholeGraph = computeCategoryStatistics( ...
-                    obj.InternalGraph, []);
+                obj.InternalGraph, []);
             for k = 1:numCategories
                 currCategory = categories(k);
                 stats.("Category" + currCategory) = computeCategoryStatistics( ...
@@ -399,7 +399,7 @@ classdef SetOfVariants < handle
             end
 
             if ~options.Quiet
-                iPrintStatistics(stats, 0);
+                printStatistics(stats, 0);
             end
         end
     end
@@ -513,13 +513,6 @@ end
 end
 
 
-function num = iNumNodesFromEdges(edgesTable)
-% Compute the number of nodes in a graph given the table of edges
-
-num = length(unique([edgesTable.EndNodes(:)]));
-end
-
-
 function aDigraph = iGraphToDigraph(aGraph)
 % Convert a graph object to a digraph object.
 
@@ -532,98 +525,4 @@ symmetricEdges.EndNodes = symmetricEndNodes;
 
 digraphEdges = [edges; symmetricEdges];
 aDigraph = digraph(digraphEdges, nodes);
-end
-
-
-function distanceTable = iCreateDistanceTable(internalDigraph)
-% Given the digraph object, create a table summary.
-
-digraphEdges = internalDigraph.Edges;
-startVariant = digraphEdges.EndNodes(:, 1);
-endVariant = digraphEdges.EndNodes(:, 2);
-
-distanceTable = table(startVariant, endVariant, digraphEdges.Weight, digraphEdges.IsProximal);
-distanceTable.Properties.VariableNames = {'StartVariant', 'EndVariant', 'Distance', 'IsProximal'};
-end
-
-
-function terminals = iSortEndVariantCouples(terminals)
-% Given the list of couples of end variants, sort them one by one
-
-couplesOfTerminals = num2cell(terminals, 2);
-couplesOfTerminals = cellfun(@sort, couplesOfTerminals, ...
-    UniformOutput=false);
-terminals = table2array(cell2table(couplesOfTerminals));
-end
-
-
-function tf = iSelectVariantCouple(endNodes, firstVariants, secondVariants)
-matchesFirst = ismember(endNodes, firstVariants);
-matchesSecond = ismember(endNodes, secondVariants);
-allMatches = [matchesFirst, matchesSecond];
-tf = false;
-if ...
-        isequal(allMatches, [1, 0, 0, 1]) || ...
-        isequal(allMatches, [0, 1, 1, 0]) || ...
-        isequal(allMatches, [1, 1, 1, 1])
-    tf = true;
-end
-end
-
-
-function iPrintStatistics(aStruct, indentationLevel)
-% Recursively print a struct.
-allFieldNames = string(fields(aStruct));
-fieldNameWidth = max(strlength(allFieldNames)) + 2;
-padding = iPad(indentationLevel);
-
-for k = 1:numel(allFieldNames)
-    currField = allFieldNames(k);
-    currFieldContent = aStruct.(currField);
-    currFieldName = string(currField);    
-    currFieldNameFormat = padding + "%" + fieldNameWidth + "s";
-
-    if isstruct(currFieldContent)
-        disp(compose(currFieldNameFormat + ":\n", currFieldName));
-        iPrintStatistics(currFieldContent, indentationLevel + 1);
-    elseif istable(currFieldContent)
-        disp(compose(currFieldNameFormat + ":\n", currFieldName));
-        problematicCol = "Attributes";
-        if ismember(problematicCol, currFieldContent.Properties.VariableNames)
-            currFieldContent = removevars(currFieldContent, problematicCol);
-        end
-        disp(iPrintTableToText(currFieldContent, indentationLevel + 1));
-    else        
-        disp(compose(currFieldNameFormat + ":  %s", ...
-            currFieldName, ...
-            string(currFieldContent)));
-    end
-end
-end
-
-
-function text = iPrintTableToText(aTable, indentationLevel)
-maxHeight = 20;
-if height(aTable)>maxHeight
-    bottomLine = ["..."; "Table is too long to display here. Only the first lines are shown."];
-    aTable = aTable(1:maxHeight, :); %#ok<NASGU>
-else
-    bottomLine = [];
-end
-text = string(evalc('disp(aTable)'));
-
-textLines = splitlines(eraseTags(text));
-textLines(end) = [];
-textLines = erase(textLines, regexpPattern('^\s\s'));
-
-if ~isempty(bottomLine)
-    textLines(end-1:end) = bottomLine;
-end
-
-text = join(iPad(indentationLevel) + textLines, newline);
-end
-
-
-function padding = iPad(indentationLevel)
-padding = string(repmat('  ', [1, indentationLevel]));
 end
