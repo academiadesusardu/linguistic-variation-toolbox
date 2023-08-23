@@ -225,24 +225,8 @@ classdef SetOfVariants < handle
             end
             validateCategory(category);
 
-            variantsInCategory = obj.getVariantsIn(category);
-            numVariantsInCategory = numel(variantsInCategory);
-            references = repmat("", numVariantsInCategory, 1);
-            numReferences = 0;
-
-            for k = 1:numVariantsInCategory
-                currVariant = variantsInCategory(k);
-                currVariantIndex = obj.InternalGraph.findnode(currVariant);
-                currAttributes = obj.InternalGraph.Nodes.Attributes{currVariantIndex};
-
-                for j = 1:numel(currAttributes)
-                    if currAttributes(j).Category==category && currAttributes(j).IsCategoryReference
-                        references(numReferences+1) = currVariant;
-                        numReferences = numReferences + 1;
-                    end
-                end
-            end
-            references(references=="") = [];
+            isThisCategoryReference = isCategoryReferenceIn(obj.InternalGraph, category);
+            references = string(obj.InternalGraph.Nodes.Name(isThisCategoryReference));
         end
 
 

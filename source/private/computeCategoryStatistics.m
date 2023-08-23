@@ -5,9 +5,12 @@ function [stats, categorySubGraph] = computeCategoryStatistics(inputGraph, categ
 % Copyright 2023 Acadèmia de su Sardu APS
 
 if ~isempty(category)
-    isCategory = cellfun(@(a) iIsCurrentCategory(a, category), inputGraph.Nodes.Attributes);
+    isCategory = cellfun(@(a) iIsCurrentCategory(a, category), ...
+        inputGraph.Nodes.Attributes);
     nodeIndices = find(isCategory);
     categorySubGraph = subgraph(inputGraph, nodeIndices);
+    categorySubGraph.Nodes.IsCategoryReference = ...
+        isCategoryReferenceIn(categorySubGraph, category);
 else
     categorySubGraph = inputGraph;
 end
