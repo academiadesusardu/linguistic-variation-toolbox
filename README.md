@@ -2,11 +2,11 @@
     <img src="https://i.ibb.co/SP6bNc2/Logo-Acad-mia-de-su-Sardu-piticu.png" alt="Logo-Acad-mia-de-su-Sardu-piticu" width="120px" border="0">
 </p>
 
-# Linguistic Diversity Toolbox [![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=academiadesusardu/linguistic-variation-toolbox&project=Linguisticvariationtoolbox.prj)
+# Linguistic Variation Toolbox [![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=academiadesusardu/linguistic-variation-toolbox&project=Linguisticvariationtoolbox.prj)
 
-The Linguistic Diversity Toolbox (LDT) is a
+The Linguistic Variation Toolbox (LVT) is a
 [MATLAB](https://uk.mathworks.com/products/matlab.html) software for the study and
-characterization of linguistic diversity through a mathematical and computational
+characterization of linguistic variation through a mathematical and computational
 approach. It is developed by [Acadèmia de su Sardu
 APS](https://www.academiadesusardu.org/) and released with an Open Source Apache 2.0
 license.
@@ -16,18 +16,22 @@ license.
 ### Installing and running
 
 [You can use this software for free on MATLAB Online](https://matlab.mathworks.com/open/github/v1?repo=academiadesusardu/linguistic-variation-toolbox&project=Linguisticvariationtoolbox.prj). You might have to create a MathWorks.com 
-account for this: this is 100% free.
+account for this: this is 100% free. Once you click the link and confirm the download of
+the package, you'll need to add the folder `source` to the MATLAB path as follows:
+```matlab
+addPath("source");
+```
 
 If you want to try it on your own MATLAB installation, on your computer, you can either:
-* install the Linguistic Diversity Toolbox through MATLAB's [Add-On Explorer](https://www.mathworks.com/products/matlab/add-on-explorer.html).
+* install the Linguistic Variation Toolbox through MATLAB's [Add-On Explorer](https://www.mathworks.com/products/matlab/add-on-explorer.html).
 * download this code and add the folder ''source'' to the MATLAB path.
 
-The Linguistic Diversity Toolbox requires the following MATLAB toolboxes:
+The Linguistic Variation Toolbox requires the following MATLAB toolboxes:
 * Statistics and Machine Learning Toolbox.
 
 ### Defining categories
 
-The first step to use LDT is to define the categories in your data. For example, let us
+The first step to use LVT is to define the categories in your data. For example, let us
 imagine we are working on Sardinian and using its two macro-varieties as categories. For
 short, we can model _Campidanese_ with the string `"C"` and _Logudorese-Nugorese_ with the
 string `"L"`:
@@ -44,7 +48,7 @@ allCategories()
 
 ### Defining a set of variants
 
-The Lingustic Diversity Toolbox helps study the properties of sets of _variants_ and the
+The Lingustic Variation Toolbox helps study the properties of sets of _variants_ and the
 patterns within. To do this, the toolbox provides an object called `SetOfVariants`.
 
 From a linguistics point of view, to work with these variants you need to have:
@@ -200,7 +204,7 @@ computed:
 
 ## How to cite
 
-> Acadèmia de su Sardu APS (2023). Linguistic Diversity Toolbox, version **XXXX**.
+> Acadèmia de su Sardu APS (2023). Linguistic Variation Toolbox, version **XXXX**.
 > [https://github.com/academiadesusardu/linguistic-variation-toolbox].
 
 In the above, substitute **XXXX** with the release number.
