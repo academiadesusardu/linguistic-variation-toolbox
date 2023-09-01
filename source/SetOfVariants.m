@@ -47,7 +47,7 @@ classdef SetOfVariants < handle
     %                             the current object using boxplots.
     %
     % Example:
-    %   allCategories(["camp", "log"]);
+    %   allCategories(["camp", "log"])
     %   variants = ["ocisòrgiu", "ochisorzu", "bochisorzu"];
     %   categories = {"camp", "log", "log"};
     %   isCategoryReference = [true, false, true];
