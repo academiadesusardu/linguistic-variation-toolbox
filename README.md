@@ -55,10 +55,13 @@ From a linguistics point of view, to work with these variants you need to have:
 Continuing with the example of Sardinian, let us assume we are using orthographic transcription
 according to the rules in Acadèmia de su Sardu's normative grammar ["Su Sardu
 Standard"](https://www.academiadesusardu.org/chi-siamo-3/su-sardu-standard/). To measure
-distances between variants, let us assume we are using [Levenshtein's distance](https://blogs.mathworks.com/cleve/2017/08/14/levenshtein-edit-distance-between-strings/):
+distances between variants, let us assume we are using [Levenshtein's
+distance](https://blogs.mathworks.com/cleve/2017/08/14/levenshtein-edit-distance-between-strings/):
+
 > The Levenshtein distance between two strings is the number of single character
 > deletions, insertions, or substitutions required to transform one string into the other. 
 > This is also known as the edit distance.
+
 For example, the Lenvenshtein distance between the strings _cat_ and _catfish_ is 4.
 However, for our application we also ignore diacritics and therefore set to 0 the distance
 between variants that are written similarly apart from the stress. For example, the
