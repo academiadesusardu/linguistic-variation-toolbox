@@ -2,7 +2,7 @@
     <img src="https://i.ibb.co/SP6bNc2/Logo-Acad-mia-de-su-Sardu-piticu.png" alt="Logo-Acad-mia-de-su-Sardu-piticu" width="120px" border="0">
 </p>
 
-# Linguistic Variation Toolbox [![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=academiadesusardu/linguistic-variation-toolbox&project=LinguisticVariationToolbox.prj)
+# Linguistic Variation Toolbox [![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=academiadesusardu/linguistic-variation-toolbox&project=LinguisticVariationToolbox.prj)![MATLAB test workflow](https://github.com/academiadesusardu/linguistic-variation-toolbox/actions/workflows/matlab.yml/badge.svg)
 
 The Linguistic Variation Toolbox (LVT) is a
 [MATLAB](https://uk.mathworks.com/products/matlab.html) software for the study and
