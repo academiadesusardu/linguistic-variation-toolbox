@@ -19,12 +19,12 @@ license.
 account for this: this is 100% free. Once you click the link and confirm the download of
 the package, you'll need to add the folder `source` to the MATLAB path as follows:
 ```matlab
-addPath("source");
+addpath("source");
 ```
 
 If you want to try it on your own MATLAB installation, on your computer, you can either:
 * install the Linguistic Variation Toolbox through MATLAB's [Add-On Explorer](https://www.mathworks.com/products/matlab/add-on-explorer.html).
-* download this code and add the folder ''source'' to the MATLAB path.
+* download this code and add the folder `source` to the MATLAB path with `addpath("source")`
 
 The Linguistic Variation Toolbox requires the following MATLAB toolboxes:
 * Statistics and Machine Learning Toolbox.
