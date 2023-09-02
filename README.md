@@ -2,12 +2,12 @@
     <img src="https://i.ibb.co/SP6bNc2/Logo-Acad-mia-de-su-Sardu-piticu.png" alt="Logo-Acad-mia-de-su-Sardu-piticu" width="120px" border="0">
 </p>
 
-# Linguistic Variation Toolbox [![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=academiadesusardu/linguistic-variation-toolbox&project=Linguisticvariationtoolbox.prj)
+# Linguistic Variation Toolbox [![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=academiadesusardu/linguistic-variation-toolbox&project=LinguisticVariationToolbox.prj)
 
 The Linguistic Variation Toolbox (LVT) is a
 [MATLAB](https://uk.mathworks.com/products/matlab.html) software for the study and
 characterization of linguistic variation through a mathematical and computational
-approach. It is developed by [Acadèmia de su Sardu
+approach. It was developed by [Acadèmia de su Sardu
 APS](https://www.academiadesusardu.org/) and released with an Open Source Apache 2.0
 license.
 
@@ -15,7 +15,7 @@ license.
 
 ### Installing and running
 
-[You can use this software for free on MATLAB Online](https://matlab.mathworks.com/open/github/v1?repo=academiadesusardu/linguistic-variation-toolbox&project=Linguisticvariationtoolbox.prj). You might have to create a MathWorks.com 
+[You can use this software for free on MATLAB Online](https://matlab.mathworks.com/open/github/v1?repo=academiadesusardu/linguistic-variation-toolbox&project=LinguisticVariationToolbox.prj). You might have to create a MathWorks.com 
 account for this: this is 100% free. Once you click the link and confirm the download of
 the package, you'll need to add the folder `source` to the MATLAB path as follows:
 ```matlab
@@ -31,7 +31,7 @@ The Linguistic Variation Toolbox requires the following MATLAB toolboxes:
 
 ### Defining categories
 
-The first step to use LVT is to define the categories in your data. For example, let us
+The first step to using LVT is to define the categories in your data. For example, let us
 imagine we are working on Sardinian and using its two macro-varieties as categories. For
 short, we can model _Campidanese_ with the string `"C"` and _Logudorese-Nugorese_ with the
 string `"L"`:
@@ -48,7 +48,7 @@ allCategories()
 
 ### Defining a set of variants
 
-The Lingustic Variation Toolbox helps study the properties of sets of _variants_ and the
+LVT helps study the properties of sets of _variants_ and the
 patterns within. To do this, the toolbox provides an object called `SetOfVariants`.
 
 From a linguistics point of view, to work with these variants you need to have:
@@ -69,11 +69,11 @@ distance](https://blogs.mathworks.com/cleve/2017/08/14/levenshtein-edit-distance
 For example, the Lenvenshtein distance between the strings _cat_ and _catfish_ is 4.
 However, for our application we also ignore diacritics and therefore set to 0 the distance
 between variants that are written similarly apart from the stress. For example, the
-distance between _arrèxini_ e _arrexìni_ is going to be 0. This way of measuring distance
+distance between _arrèxini_ and _arrexìni_ is going to be 0. This way of measuring distance
 is the default for `SetOfVariants` objects.
 
 One way to create the object is to list the variants of interest, the categories they
-belong in, and whether each variant is a reference within its category:
+belong to, and whether each variant is a reference within its category:
 ```matlab
 variants = ["ocisòrgiu", "ochisorzu", "bochisorzu"];
 categories = ["C", "L", "L"];
@@ -109,7 +109,7 @@ For a complete documentation on `SetOfVariants` objects, you can type:
 help SetOfVariants
 ```
 
-### Represent the data graphically
+### Representing the data graphically
 
 To represent the set of variants graphically, one can type:
 ```matlab
@@ -124,18 +124,18 @@ length is less than the _median_ value, that is the most statistically significa
 <img src="https://i.ibb.co/4T3htKr/no-options.png"
 alt="plot-no-options" align="center" border="0">
 
-**Important:** note that this representation does not represent the distances _exactly_, 
+**Important:** Note that this representation does not represent the distances _exactly_, 
 but can highlight patterns within the set of variants. We can use these representations to
-formulate hypotheses on the data, which can be then proved using the statistics (see
+formulate hypotheses on the data, which can be then proved using the statistics (see the
 following section in this guide).
 
-There are different options that can be combined for representing the data graphically.
+Different options can be combined to represent the data graphically.
 For the full documentation, you can type:
 ```matlab
 help SetOfVariants/plot
 ```
 
-The option `CenterCategories` expectes two categories as an input. It rotates and centers 
+The option `CenterCategories` expects two categories as an input. It rotates and centres 
 the plot in a way that the category references lay on a line in the middle of the plot.
 The center of the segment between the categories is the center of the plot.
 ```matlab
@@ -148,7 +148,7 @@ The option `PlacementAlgorithm` changes the way the nodes are placed on the plot
 be `mds` (the default) or `force`. By default, the Linguistic Variation Toolbox will use
 [multi-dimensional
 scaling](https://uk.mathworks.com/help/stats/cmdscale.html?searchHighlight=cmdscale&s_tid=srchtitle_support_results_1_cmdscale)
-to represent the distances as accurately as possible, and write to the command line the
+to represent the distances as accurately as possible and write to the command line the
 maximum relative error in the plot. The `force` algorithm uses an alternative approach 
 to represent the graph, which often leads to better readability of the variants in the
 plot.
@@ -158,7 +158,7 @@ set.plot(CenterCategories=["C", "L"], PlacementAlgorithm="force")
 <img src="https://i.ibb.co/qjC075T/force.png"
 alt="plot-force" align="center" border="0">
 
-The option `Mode` toggles between the `complete` plot (default) and `proximal` plot. The
+The option `Mode` toggles between the `complete` plot (default) and the `proximal` plot. The
 `proximal` plot is a representation where every variant is connected to its closest
 variant by an arc with direction. This can be used to highlight other patterns within the
 set of variants.
@@ -182,7 +182,7 @@ The following statistics are computed both by category and on the overall set of
 * _Diameter_: the maximum distance between two variants.
 * _MeanDistance_: the average distance between two variants.
 * _RangeDistance_: the difference between the maximum and the minimum distance.
-* _MeanDistanceFromBaricentre_: the Linguistic Variation Toolbox computes the
+* _MeanDistanceFromBaricentre_: LVT computes the
   multi-dimensional scaling of the variants in the graph, which is the representation of
   the variants and their distances as a geometry. It then computes the
   baricentre, i.e. the central point, of the obtained geometry. Then, it computes the
