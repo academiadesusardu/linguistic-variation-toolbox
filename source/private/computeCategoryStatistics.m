@@ -64,6 +64,7 @@ else
     generalStats.RangeDistance = range(distances, "all");
     generalStats.MeanDistanceFromBaricentre = mean(distanceFromBaricentre, "all");
 end
+generalStats.NumVariants = numnodes(categorySubGraph);
 end
 
 
