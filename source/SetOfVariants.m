@@ -453,7 +453,7 @@ for k = 1:inputLength
 
     for j = 1:length(currElement)
         currAttribute = currElement(j);
-        if isstring(currAttribute)
+        if isstring(currAttribute) || ischar(currAttribute)
             validateCategory(currAttribute);
 
             currElementIsCategoryReference = isCategoryReference(k);
