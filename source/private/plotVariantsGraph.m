@@ -9,6 +9,10 @@ currAxes = axes(currFigure, Visible="off", Color="none");
 
 plotGraph = inputGraph;
 
+% Corner case: variants that only differ by a diacritic. Keep them close
+% but not too much.
+plotGraph.Edges.Weight(plotGraph.Edges.Weight==0) = 0.2;
+
 [plotGraph.Nodes.Marker, ...
     plotGraph.Nodes.Color, ...
     plotGraph.Nodes.MarkerSize] = iGetNodesSpec(plotGraph.Nodes);
