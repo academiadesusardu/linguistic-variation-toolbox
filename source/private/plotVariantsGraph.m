@@ -167,7 +167,7 @@ index = find(allCategories() == category);
 end
 
 function cm = iColorMap(data)
-numColors = computeEdgesWeightThreshold(data);
+numColors = floor(computeEdgesWeightThreshold(data));
 cm = gray(numColors);
 end
 
