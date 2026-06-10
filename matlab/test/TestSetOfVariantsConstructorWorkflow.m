@@ -29,5 +29,5 @@ classdef (SharedTestFixtures={matlab.unittest.fixtures.PathFixture(fullfile('..'
 end
 
 function fld = iDataFolder()
-fld = fullfile("..", "data");
+fld = fullfile("..", "..", "data");
 end

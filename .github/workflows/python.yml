@@ -1,0 +1,23 @@
+name: Tests (Python)
+on: [push]
+jobs:
+  run-python-tests:
+    name: Run Python Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install -e "python/[dev]"
+      - name: Run tests
+        run: pytest python/test/ --junitxml=test-results/results.xml
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: test-results/results.xml
+        if: always()
