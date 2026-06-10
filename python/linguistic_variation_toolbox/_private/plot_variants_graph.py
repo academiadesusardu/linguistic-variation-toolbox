@@ -99,7 +99,7 @@ def plot_variants_graph(graph: nx.Graph, options: dict):
 
     edges = list(graph.edges)
     weights = np.array([
-        max(graph.edges[u, v]["Weight"], np.finfo(float).eps)
+        max(graph.edges[u, v]["Weight"], 0.2)
         for u, v in edges
     ])
 
