@@ -184,6 +184,114 @@ class SetOfVariants:
         combined_groups = np.concatenate(all_groups)
         return plot_box_scatter(combined_data, combined_groups, labels)
 
+    def to_cytoscape_json(
+        self,
+        placement_algorithm: str = FORCE_PLACEMENT_ALGORITHM,
+        center_categories: tuple[str, str] | None = None,
+    ) -> dict:
+        """Return a minimal dict for Cytoscape.js with Python-computed positions.
+
+        Positions are identical to those produced by plot() with the same arguments.
+        Keys are abbreviated to keep the JSON small: l=label, c=categories,
+        ref=isRef, s=source, t=target, w=weight.
+        """
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        import numpy as np
+
+        from ._private.constants import MDS_PLACEMENT_ALGORITHM
+        from ._private.place_variants_in_plot import place_variants_in_plot
+        from ._private.compute_edges_weight_threshold import compute_edges_weight_threshold
+
+        graph = self._graph
+        nodes = list(graph.nodes)
+
+        # --- compute positions (same pipeline as plot()) ---
+        fig, ax = plt.subplots()
+        if placement_algorithm == FORCE_PLACEMENT_ALGORITHM:
+            import networkx as nx
+            pos = nx.kamada_kawai_layout(graph, weight="Weight")
+        else:
+            import networkx as nx
+            pos = nx.spring_layout(graph, weight="Weight", iterations=1, seed=0)
+            pos = place_variants_in_plot(graph, pos)
+
+        if center_categories is not None:
+            from ._private.orient_graph_plot import orient_graph_plot
+            pos = orient_graph_plot(ax, graph, pos, center_categories[0], center_categories[1])
+        plt.close(fig)
+
+        # --- normalize to ~1000×1000 canvas; flip Y (matplotlib up → Cytoscape down) ---
+        xs = [pos[n][0] for n in nodes]
+        ys = [pos[n][1] for n in nodes]
+        cx = (min(xs) + max(xs)) / 2
+        cy = (min(ys) + max(ys)) / 2
+        span = max(max(xs) - min(xs), max(ys) - min(ys), 1e-9)
+        scale = 900.0 / span
+
+        def _nx(x: float) -> float:
+            return round((x - cx) * scale + 500.0, 1)
+
+        def _ny(y: float) -> float:
+            return round(-(y - cy) * scale + 500.0, 1)
+
+        # --- weight threshold (median of all undirected weights) ---
+        all_weights = np.array([graph.edges[u, v]["Weight"] for u, v in graph.edges()])
+        threshold = float(compute_edges_weight_threshold(all_weights)) if len(all_weights) else 0.0
+
+        # --- nodes ---
+        out_nodes = []
+        for node in nodes:
+            data = graph.nodes[node]
+            out_nodes.append({
+                "id": node,
+                "l": node,
+                "c": [a.category for a in data["Attributes"]],
+                "ref": data["IsCategoryReference"],
+                "x": _nx(pos[node][0]),
+                "y": _ny(pos[node][1]),
+            })
+
+        # --- proximal directed edges ---
+        prox_edges = [
+            {"s": u, "t": v, "w": data["Weight"]}
+            for u, v, data in self._digraph.edges(data=True)
+            if data.get("IsProximal", False)
+        ]
+
+        # --- close undirected edges (weight ≤ threshold, dedup) ---
+        seen: set[tuple[str, str]] = set()
+        close_edges = []
+        for u, v, data in graph.edges(data=True):
+            key = (min(u, v), max(u, v))
+            if key not in seen and data["Weight"] <= threshold:
+                seen.add(key)
+                close_edges.append({"s": u, "t": v, "w": data["Weight"]})
+
+        return {
+            "nodes": out_nodes,
+            "proxEdges": prox_edges,
+            "closeEdges": close_edges,
+            "threshold": threshold,
+        }
+
+    def export_cytoscape_json(
+        self,
+        path,
+        placement_algorithm: str = FORCE_PLACEMENT_ALGORITHM,
+        center_categories: tuple[str, str] | None = None,
+    ) -> None:
+        """Write Cytoscape.js JSON (with pre-computed positions) to a file."""
+        import json
+        from pathlib import Path
+        data = self.to_cytoscape_json(
+            placement_algorithm=placement_algorithm,
+            center_categories=center_categories,
+        )
+        with open(Path(path), "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False)
+
     def compute_statistics(self, quiet: bool = False) -> dict:
         """Compute statistics and optionally print them."""
         cats = all_categories()

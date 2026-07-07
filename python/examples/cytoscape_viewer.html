@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linguistic Variation Graph Viewer</title>
+  <script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 13px; background: #EDF1F7; color: #18253A; }
+    #app { display: grid; grid-template-rows: auto 1fr; height: 100%; }
+
+    #toolbar {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      padding: 10px 16px; background: #FFFFFF; border-bottom: 1px solid #CED7E6;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    #toolbar h1 { font-size: 14px; font-weight: 700; color: #18253A; letter-spacing: -0.01em; margin-right: 4px; }
+    .sep { width: 1px; height: 20px; background: #CED7E6; }
+    .pill-row { display: flex; background: #EDF1F7; border: 1px solid #CED7E6; border-radius: 8px; padding: 3px; gap: 2px; }
+    button {
+      all: unset; cursor: pointer; font: inherit; font-size: 12px; font-weight: 500;
+      padding: 4px 12px; border-radius: 6px; color: #5A708C;
+      transition: background .12s, color .12s; white-space: nowrap;
+    }
+    button:hover { background: #D6DFEC; color: #18253A; }
+    button.active { background: #2F6FBF; color: #fff; }
+    label.file-btn {
+      cursor: pointer; font-size: 12px; font-weight: 500; padding: 5px 14px;
+      border-radius: 7px; border: 1px solid #CED7E6; background: #FFFFFF;
+      color: #5A708C; transition: border-color .12s, color .12s;
+    }
+    label.file-btn:hover { color: #18253A; border-color: #2F6FBF; }
+    input[type=file] { display: none; }
+    #status { margin-left: auto; font-size: 11px; color: #5A708C; }
+
+    #cy { width: 100%; height: 100%; background: #EDF1F7; }
+
+    #legend {
+      position: fixed; bottom: 20px; right: 18px;
+      background: #FFFFFF; border: 1px solid #CED7E6; border-radius: 10px;
+      padding: 12px 14px; font-size: 11px; line-height: 1.9;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.10); min-width: 144px;
+    }
+    #legend h4 { font-size: 9px; text-transform: uppercase; letter-spacing: .09em; color: #5A708C; font-weight: 700; margin-bottom: 6px; }
+    .leg-row { display: flex; align-items: center; gap: 8px; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .edge-swatch { width: 22px; height: 2px; flex-shrink: 0; border-radius: 1px; }
+    hr.leg-sep { border: none; border-top: 1px solid #E5EBF4; margin: 5px 0; }
+
+    #tooltip {
+      position: fixed; pointer-events: none; z-index: 100;
+      background: #FFFFFF; border: 1px solid #CED7E6; border-radius: 7px;
+      padding: 8px 12px; font-size: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+      max-width: 220px; display: none;
+    }
+    #tooltip .name { font-weight: 600; color: #18253A; }
+    #tooltip .meta { color: #5A708C; font-size: 11px; margin-top: 2px; }
+    #tooltip .nblist { margin-top: 6px; font-size: 11px; color: #18253A; }
+    #tooltip .nblist span { color: #5A708C; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div id="toolbar">
+    <h1>Linguistic Variation Graph</h1>
+    <div class="sep"></div>
+    <div class="pill-row">
+      <button id="btnProx" onclick="setMode('proximal')">Proximal</button>
+      <button id="btnFull" class="active" onclick="setMode('complete')">Complete</button>
+    </div>
+    <label class="file-btn">
+      Carica JSON…
+      <input type="file" id="fileInput" accept=".json">
+    </label>
+    <span id="status">Nessun file caricato</span>
+  </div>
+  <div id="cy"></div>
+</div>
+
+<div id="legend">
+  <h4>Legenda</h4>
+  <div class="leg-row"><div class="dot" style="background:#3DA83B"></div>Campidanese</div>
+  <div class="leg-row"><div class="dot" style="background:#BE3535"></div>Logudorese</div>
+  <div class="leg-row"><div class="dot" style="background:#5B6DC8"></div>Entrambe</div>
+  <hr class="leg-sep">
+  <div class="leg-row">
+    <svg width="11" height="11" viewBox="0 0 11 11" style="flex-shrink:0">
+      <polygon points="5.5,0 6.8,3.8 10.8,3.8 7.5,6.2 8.7,10 5.5,7.7 2.3,10 3.5,6.2 0.2,3.8 4.2,3.8" fill="#18253A"/>
+    </svg>
+    Forma standard
+  </div>
+  <hr class="leg-sep">
+  <div class="leg-row" id="legProx" style="display:none"><div class="edge-swatch" style="background:#D4820A"></div>Arco prossimale</div>
+  <div class="leg-row" id="legClose">
+    <div class="edge-swatch" style="background:rgba(80,100,140,0.4);height:1px"></div>Coppia vicina
+  </div>
+</div>
+
+<div id="tooltip">
+  <div class="name" id="ttName"></div>
+  <div class="meta" id="ttMeta"></div>
+  <div class="nblist" id="ttNb"></div>
+</div>
+
+<script>
+const CAT_COLOR = { C: '#3DA83B', L: '#BE3535' };
+const PROX_COLOR = '#D4820A';
+const CLOSE_COLOR = '#8090B0';
+
+function nodeColor(cats) {
+  if (cats.length > 1) return '#5B6DC8';
+  return CAT_COLOR[cats[0]] || '#888';
+}
+
+let cy = null;
+let graphData = null;
+let currentMode = 'complete';
+
+// ─── grayscale edge color matching Python's colormap ──────────────────────
+// n = int(threshold); gray[idx] = (2*idx+1)/(2*n); darker = closer
+function closeEdgeColor(w, threshold) {
+  const n = Math.floor(threshold);
+  if (n === 0) return '#888';
+  const idx = Math.max(1, Math.min(Math.floor(w), n)) - 1;
+  const g = Math.round((2 * idx + 1) / (2 * n) * 255);
+  return `rgb(${g},${g},${g})`;
+}
+function closeEdgeWidth(w) { return w <= 1 ? 1.0 : 0.5; }
+
+// ─── build edges from the stored graph data ────────────────────────────────
+function edgeElements(mode) {
+  if (!graphData) return [];
+  if (mode === 'proximal') {
+    return graphData.proxEdges.map((e, i) => ({
+      group: 'edges',
+      data: { id: 'p' + i, source: e.s, target: e.t, weight: e.w, kind: 'proximal' }
+    }));
+  }
+  return graphData.closeEdges
+    .filter(e => Math.floor(e.w) < Math.floor(graphData.threshold))
+    .map((e, i) => ({
+    group: 'edges',
+    data: {
+      id: 'c' + i, source: e.s, target: e.t, weight: e.w, kind: 'close',
+      lineColor: closeEdgeColor(e.w, graphData.threshold),
+      lineWidth: closeEdgeWidth(e.w),
+    }
+  }));
+}
+
+// ─── build or rebuild Cytoscape instance ──────────────────────────────────
+function buildCy() {
+  const cytNodes = graphData.nodes.map(n => ({
+    group: 'nodes',
+    data: {
+      id: n.id,
+      label: n.l,
+      categories: n.c,
+      isRef: n.ref,
+      color: nodeColor(n.c),
+    },
+    position: { x: n.x, y: n.y },  // pre-computed by Python
+  }));
+
+  if (cy) cy.destroy();
+
+  cy = cytoscape({
+    container: document.getElementById('cy'),
+    elements: cytNodes.concat(edgeElements(currentMode)),
+    layout: { name: 'preset' },   // positions come from Python — no computation
+    style: [
+      {
+        selector: 'node',
+        style: {
+          'background-color': 'data(color)',
+          'label': 'data(label)',
+          'font-family': 'system-ui, sans-serif',
+          'font-size': '10px',
+          'color': '#18253A',
+          'text-valign': 'bottom',
+          'text-halign': 'center',
+          'text-margin-y': 3,
+          'width': 16,
+          'height': 16,
+          'border-width': 0,
+        }
+      },
+      {
+        selector: 'node[?isRef]',
+        style: { 'shape': 'star', 'width': 22, 'height': 22, 'font-weight': 'bold', 'font-size': '11px' }
+      },
+      {
+        selector: 'edge[kind="proximal"]',
+        style: {
+          'line-color': PROX_COLOR,
+          'target-arrow-color': PROX_COLOR,
+          'target-arrow-shape': 'triangle',
+          'arrow-scale': 0.9,
+          'curve-style': 'bezier',
+          'width': 1.8,
+          'opacity': 0.85,
+        }
+      },
+      {
+        selector: 'edge[kind="close"]',
+        style: {
+          'line-color': 'data(lineColor)',
+          'width': 'data(lineWidth)',
+          'opacity': 1,
+          'curve-style': 'straight',
+        }
+      },
+      { selector: 'node:selected', style: { 'border-width': 2, 'border-color': '#18253A' } },
+      { selector: '.faded', style: { 'opacity': 0.08 } },
+      { selector: '.highlighted', style: { 'opacity': 1 } },
+    ],
+    wheelSensitivity: 0.3,
+    fit: true,
+    padding: 40,
+  });
+
+  // tooltip
+  cy.on('mouseover', 'node', function(evt) {
+    const n = evt.target;
+    const pos = n.renderedPosition();
+    const rect = document.getElementById('cy').getBoundingClientRect();
+    document.getElementById('ttName').textContent = n.data('label');
+    document.getElementById('ttMeta').textContent =
+      n.data('categories').join(', ') + (n.data('isRef') ? ' · forma standard' : '');
+    // proximal neighbours
+    const nbEdges = n.connectedEdges('[kind="proximal"]');
+    let html = '';
+    nbEdges.forEach(e => {
+      const other = e.source().id() === n.id() ? e.target() : e.source();
+      const dir = e.source().id() === n.id() ? '→' : '←';
+      html += `<div>${dir} ${other.data('label')} <span>(d=${e.data('weight')})</span></div>`;
+    });
+    document.getElementById('ttNb').innerHTML = html ? '<br>' + html : '';
+    const tt = document.getElementById('tooltip');
+    tt.style.left = (rect.left + pos.x + 18) + 'px';
+    tt.style.top  = (rect.top  + pos.y - 10) + 'px';
+    tt.style.display = 'block';
+  });
+  cy.on('mouseout', 'node', () => { document.getElementById('tooltip').style.display = 'none'; });
+
+  // neighbourhood highlight on click
+  cy.on('tap', 'node', function(evt) {
+    cy.elements().addClass('faded').removeClass('highlighted');
+    evt.target.closedNeighborhood().removeClass('faded').addClass('highlighted');
+  });
+  cy.on('tap', function(evt) {
+    if (evt.target === cy) cy.elements().removeClass('faded highlighted');
+  });
+}
+
+// ─── mode switch (no relayout needed — just swap edges) ───────────────────
+function setMode(m) {
+  currentMode = m;
+  document.getElementById('btnProx').classList.toggle('active', m === 'proximal');
+  document.getElementById('btnFull').classList.toggle('active', m === 'complete');
+  document.getElementById('legClose').style.display = m === 'complete' ? 'flex' : 'none';
+  document.getElementById('legProx').style.display  = m === 'proximal' ? 'flex' : 'none';
+  if (!cy) return;
+  cy.edges().remove();
+  cy.add(edgeElements(m));
+}
+
+// ─── file load ─────────────────────────────────────────────────────────────
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      graphData = JSON.parse(ev.target.result);
+      buildCy();
+      document.getElementById('status').textContent =
+        `${graphData.nodes.length} varianti · ${graphData.proxEdges.length} archi prossimali`;
+    } catch(err) {
+      document.getElementById('status').textContent = 'Errore: JSON non valido';
+      console.error(err);
+    }
+  };
+  reader.readAsText(file);
+});
+</script>
+</body>
+</html>
